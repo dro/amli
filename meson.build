@@ -3,8 +3,7 @@ project(
     'amli',
     'c',
     default_options: [
-        'c_std=c11',
-        'b_sanitize=address,undefined'
+        'c_std=c11'
     ] 
 )
 
