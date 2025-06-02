@@ -32,7 +32,7 @@ jobs:
 
       - name: upload meson test logs
         uses: actions/upload-artifact@v4
-        if: failure()
+        # if: failure()
         with:
           name: meson_test_log${{ matrix.os }}.txt
           path: build/meson-logs/testlog.txt
