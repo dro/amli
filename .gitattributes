@@ -1,0 +1,4 @@
+# Ignore testcase ASL/AML files in project language percentage.
+*.asl linguist-vendored
+*.aml linguist-vendored
+tests/feature_test_1/*.asl -linguist-vendored
