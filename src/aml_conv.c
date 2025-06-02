@@ -1689,7 +1689,7 @@ AmlConvPackageStore(
 		case AML_DATA_TYPE_PACKAGE:
 		case AML_DATA_TYPE_PACKAGE_ELEMENT:
 		case AML_DATA_TYPE_FIELD_UNIT:
-			AML_DEBUG_PANIC( State, "Fatal: Invalid package element type, report this!" );
+			AML_DEBUG_ERROR( State, "Error: Invalid package element type, report this!" );
 			return AML_FALSE;
 		default:
 			break;
