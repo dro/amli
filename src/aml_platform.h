@@ -7,9 +7,16 @@
 #include <stdarg.h>
 
 //
+// Allows the user to include a custom platform header that may override some of our definitions.
+//
+#ifdef AML_BUILD_HOST_PLATFORM_HEADER
+ #include "aml_host_platform.h"
+#endif
+
+//
 // Include compiler intrinsic definitions on MSVC build.
 //
-#if defined(_MSC_VER)
+#ifdef _MSC_VER
  #include <intrin.h>
 #endif
 
