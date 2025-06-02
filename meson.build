@@ -42,6 +42,5 @@ runtest = executable(
     build_by_default: not meson.is_subproject()
 )
 
-
 # Define all test cases.
-test('feature test', runtest, args : ['tests/feature_test_1/DSDT.aml'])
+test('feature test', runtest, args : [join_paths(meson.source_root(), 'tests/feature_test_1/DSDT.aml')])
