@@ -43,4 +43,5 @@ runtest = executable(
 )
 
 # Define all test cases.
-test('feature test', runtest, args : [join_paths(meson.source_root(), 'tests/feature_test_1/DSDT.aml')])
+test('feature test 1', runtest, args : [join_paths(meson.source_root(), 'tests/feature_test_1/DSDT.aml')])
+test('board test 1', runtest, args : [join_paths(meson.source_root(), 'tests/board_test_1/DSDT.aml')])
