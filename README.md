@@ -37,15 +37,13 @@ The main runtest example can be executed like so:
 
 ## Implementing
 All functions within aml_host.h should be implemented by the host environment/user.
-An AML_ALLOCATOR interface should be implemented to be used as the backend allocator, 
-it is only ever used to back internal allocators, and can be a very simplistic page-granularity allocator.
+An AML_ALLOCATOR interface should be implemented to be used as the backend allocator, it is only ever used to back internal allocators, and can be a very simplistic page-granularity allocator.
 Some currently may be stubbed out and not used, such as mutex and event support, due to lack of multithreaded support.
 Most of the initialization follows the typical ACPI initialization process, but is abstracted away if desired.
 After creating the eval state, the user should create predefined namespaces and objects.
-Once all predefined state has been created, the DSDT should be executed first using AmlEvalLoadedTableCode, followed by all SSDTs.
-Once all tables have been loaded, the user can call AmlCompleteInitialLoad to finalize the loading process,
-this will build the hierarchical namespace tree, broadcast any pending region-space handlers (pending _REG invocations),
-and optionally initialize all applicable devices in the namespace (_STA, _INI).
+Once all predefined state has been created, the DSDT should be executed first using `AmlEvalLoadedTableCode`, followed by all SSDTs.
+Once all tables have been loaded, the user can call `AmlCompleteInitialLoad` to finalize the loading process, this will build the hierarchical namespace tree, broadcast any pending region-space handlers (pending _REG invocations), and optionally initialize all applicable devices in the namespace (_STA, _INI).
+The host will be informed of devices that have been successfully initialized will be through `AmlHostOnDeviceInitialized`.
 For more information, see the runtest example application.
 
 ```c
