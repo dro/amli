@@ -33,7 +33,7 @@ src = files(
 inc = include_directories('src')
 
 # Build runtest example application if we aren't being used as a subproject.
-runtest_src = (src + files('examples/runtest/main.c', 'examples/runtest/runtest_host.c'))
+runtest_src = (src + files('examples/runtest/runtest_main.c', 'examples/runtest/runtest_host.c'))
 runtest_inc = [inc, include_directories('examples/runtest')]
 runtest = executable(
     'runtest',
