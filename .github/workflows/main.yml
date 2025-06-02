@@ -16,20 +16,15 @@ jobs:
       - name: setup tools
         uses: actions/setup-python@v5
 
-      - name: meson setup with sanitizers enabled (linux only)
+      - name: meson build with sanitizers enabled (linux only)
         if: matrix.os == 'ubuntu-latest'
         uses: BSFishy/meson-build@v1.0.3
         with:
-          action: setup
+          action: build
           options: "-Db_sanitize=address,undefined"
 
-      - name: meson setup with no sanitizers (OS other than linux)
+      - name: meson build with no sanitizers (OS other than linux)
         if: matrix.os != 'ubuntu-latest'
-        uses: BSFishy/meson-build@v1.0.3
-        with:
-          action: setup
-      
-      - name: meson build
         uses: BSFishy/meson-build@v1.0.3
         with:
           action: build
