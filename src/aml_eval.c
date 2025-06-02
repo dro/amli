@@ -89,7 +89,7 @@
 //  [DONE] (?) Need to support field ACCESS_ATTRIBUTE_BYTES/pass along optional field to OperationRegionRead/Write?
 //  [DONE] Field connection support.
 //  [DONE] Fix connection under-referencing and leak in field parsing!
-//  [DONE] _INI re-broadcast  for tables that are loaded after the main initial pass.
+//  [DONE] _INI re-broadcast for tables that are loaded after the main initial pass.
 //  [DONE] (kind of, links to existing tree parents) Namespace tree building for tables that are loaded after the main initial pass.
 //  [DONE] _REG re-broadcast for tables that are loaded after the main initial pass.
 //  [DONE] Better memory management for conditional error handling (full state snapshots?).
