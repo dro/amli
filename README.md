@@ -76,9 +76,6 @@ AmlCompleteInitialLoad( &State, AML_TRUE );
 All platform-specific intrinsics/helpers defined in `aml_platform.h` can be overridden. 
 Other than these, some special preprocessor defines exist to control the build and certain features at compile-time.
 
-### `AML_BUILD_OVERRIDE_ARENA`
-Allows the user to integrate their own arena allocator. Defines away the internal arena implementation, the user should implement all functions defined in `aml_arena.h`.
-
 ### `AML_BUILD_DEBUG_LEVEL`
 Change the minimum debug logging verbosity level at compile-time. Possible values:
 - `AML_DEBUG_LEVEL_TRACE`
@@ -86,6 +83,9 @@ Change the minimum debug logging verbosity level at compile-time. Possible value
 - `AML_DEBUG_LEVEL_WARNING`
 - `AML_DEBUG_LEVEL_ERROR`
 - `AML_DEBUG_LEVEL_FATAL`
+
+### `AML_BUILD_OVERRIDE_ARENA`
+Allows the user to integrate their own arena allocator. Defines away the internal arena implementation, the user should implement all functions defined in `aml_arena.h`.
 
 ### `AML_BUILD_OVERRIDE_HASH`
 Allows the user to integrate their own hashing function, the user must implement `AmlHashKey32` defined in `aml_hash.h`.
