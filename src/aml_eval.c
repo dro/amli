@@ -826,7 +826,7 @@ AmlEvalDataObject(
 		//
 		// Validate package element count.
 		//
-		if( OpaqueData.u.Package.NumElements > ( SIZE_MAX / sizeof( PackageElementList ) ) ) {
+		if( OpaqueData.u.Package.NumElements >= ( SIZE_MAX / sizeof( *PackageElementList ) ) ) {
 			return AML_FALSE;
 		}
 

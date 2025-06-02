@@ -1,4 +1,5 @@
 #include "aml_heap.h"
+#include <stdlib.h>
 
 //
 // TODO: Improve heap allocator, add more bins inbetween pow2 values, implement splitting/coalescing of halves.
@@ -31,6 +32,10 @@ AmlHeapAllocate(
 	SIZE_T              BinIndex;
 	AML_HEAP_BIN_ENTRY* BinEntry;
 	SIZE_T              BlockSize;
+
+#if AML_BUILD_FUZZER
+	return malloc( Size );
+#endif
 
 	//
 	// Get closest fitting upward bin for the given size
@@ -94,6 +99,11 @@ AmlHeapFree(
 	AML_HEAP_BIN_ENTRY* BinEntry;
 	SIZE_T              LzCount;
 	SIZE_T              BinIndex;
+
+#ifdef AML_BUILD_FUZZER
+	free( AllocationData );
+	return;
+#endif
 
 	//
 	// Get the chunk header of the given allocation data.

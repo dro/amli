@@ -214,7 +214,9 @@ AmlEvalFieldElement(
 		//
 		AmlDecoderConsumeByte( State, NULL );
 		if( AmlDecoderMatchNameString( State, AML_FALSE, &ConnectionName ) ) {
+			ConnectionNode = NULL;
 			if( ( AmlNamespaceSearch( &State->Namespace, NULL, &ConnectionName, 0, &ConnectionNode ) == AML_FALSE )
+				|| ( ConnectionNode == NULL )
 				|| ( ConnectionNode->Object == NULL )
 				|| ( ConnectionNode->Object->Type != AML_OBJECT_TYPE_NAME )
 				|| ( ConnectionNode->Object->u.Name.Value.Type != AML_DATA_TYPE_BUFFER ) 
