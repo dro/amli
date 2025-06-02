@@ -19,7 +19,11 @@ jobs:
       - name: meson build
         uses: BSFishy/meson-build@v1.0.3
         with:
-          action: build 
+          action: build
+
+      - name: Check if DSDT.aml exists
+        run: ls -l tests/feature_test_1
+        working-directory: ${{ github.workspace }}
           
       - name: meson test
         uses: BSFishy/meson-build@v1.0.3
