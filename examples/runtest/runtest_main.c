@@ -207,7 +207,9 @@ AmlTestExecuteSingleTable(
 		}
 	}
 
+#ifndef AML_BUILD_FUZZER
 	printf( "\n\nAll test cases completed successfully.\n" );
+#endif
 	AmlStateFree( &State );
 	return AML_TRUE;
 }
