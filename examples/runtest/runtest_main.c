@@ -311,18 +311,6 @@ LLVMFuzzerTestOneInput(
 	return 0;
 }
 
-int LLVMFuzzerRunDriver( int* argc, char*** argv,
-						 int ( *UserCb )( const uint8_t* Data, size_t Size ) );
-
-_Success_( return == EXIT_SUCCESS )
-INT
-main(
-	_In_               INT    ArgC,
-	_In_count_( ArgC ) CHAR** ArgV
-	)
-{
-	return LLVMFuzzerRunDriver( &ArgC, &ArgV, LLVMFuzzerTestOneInput );
-}
 
 #else
 
