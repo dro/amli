@@ -70,3 +70,32 @@ if( AmlEvalLoadedTableCode( &State, DsdtCode, DsdtCodeSize, NULL ) == AML_FALSE 
 //
 AmlCompleteInitialLoad( &State, AML_TRUE );
 ```
+
+## Build configuration
+
+All platform-specific intrinsics/helpers defined in `aml_platform.h` can be overridden. 
+Other than these, some special preprocessor defines exist to control the build and certain features at compile-time.
+
+### `AML_BUILD_DEBUG_LEVEL`
+Change the minimum debug logging verbosity level at compile-time. Possible values:
+- `AML_DEBUG_LEVEL_TRACE`
+- `AML_DEBUG_LEVEL_INFO`
+- `AML_DEBUG_LEVEL_WARNING`
+- `AML_DEBUG_LEVEL_ERROR`
+- `AML_DEBUG_LEVEL_FATAL`
+
+### `AML_BUILD_OVERRIDE_ARENA`
+Allows the user to integrate their own arena allocator. Defines away the internal arena implementation, the user should implement all functions defined in `aml_arena.h`.
+
+### `AML_BUILD_OVERRIDE_HASH`
+Allows the user to integrate their own hashing function, the user must implement `AmlHashKey32` defined in `aml_hash.h`.
+
+### `AML_BUILD_OVERRIDE_INTEGER_TYPES`
+Allows the user to override the base integer types used in `aml_platform.h`
+
+### `AML_BUILD_NO_SNAPSHOT_ITEMS`
+Disables snapshot rollback of state items, can be useful to help debugging in some cases.
+
+### `AML_BUILD_OVERRIDE_STRING_CONV`
+Allows the user to integrate their own string conversion functions, the user must implement all functions defined in `aml_string_conv.h`.
+
