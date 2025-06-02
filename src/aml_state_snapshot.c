@@ -57,6 +57,7 @@ AmlStateSnapshotItemCreate(
 	_In_    AML_STATE_SNAPSHOT_ITEM_DATA Data
 	)
 {
+#ifndef AML_BUILD_NO_SNAPSHOT_ITEMS
 	AML_STATE_SNAPSHOT_ITEM* Item;
 
 	//
@@ -67,7 +68,10 @@ AmlStateSnapshotItemCreate(
 		return NULL;
 	}
 	*Item = ( AML_STATE_SNAPSHOT_ITEM ){ .Valid = 1, .State = State, .Type = Type, .u = Data, .ReferenceCount = 1 };
-	return Item;
+#else
+	static AML_STATE_SNAPSHOT_ITEM Sentinel;
+	return &Sentinel;
+#endif
 }
 
 //
@@ -78,9 +82,11 @@ AmlStateSnapshotItemReference(
 	_Inout_ AML_STATE_SNAPSHOT_ITEM* Item
 	)
 {
+#ifndef AML_BUILD_NO_SNAPSHOT_ITEMS
 	if( ++Item->ReferenceCount == 0 ) {
 		AML_TRAP_STRING( "State snapshot item reference counter overflow!" );
 	}
+#endif
 }
 
 //
@@ -91,11 +97,13 @@ AmlStateSnapshotItemRelease(
 	_Inout_ AML_STATE_SNAPSHOT_ITEM* Item
 	)
 {
+#ifndef AML_BUILD_NO_SNAPSHOT_ITEMS
 	if( Item->ReferenceCount-- == UINT64_MAX ) {
 		AML_TRAP_STRING( "State snapshot item reference counter underflow!" );
 	} else if( Item->ReferenceCount == 0 ) {
 		AmlHeapFree( &Item->State->Heap, Item );
 	}
+#endif
 }
 
 //
@@ -108,6 +116,7 @@ AmlStateSnapshotItemPushAction(
 	_In_        BOOLEAN                  IsRaise
 	)
 {
+#ifndef AML_BUILD_NO_SNAPSHOT_ITEMS
 	AML_STATE*                     State;
 	AML_STATE_SNAPSHOT_ACTION*     Action;
 	AML_STATE_SNAPSHOT_ITEM_FRAME* Frame;
@@ -199,6 +208,7 @@ AmlStateSnapshotItemPushAction(
 	}
 	Frame->ActionLast  = Action;
 	Frame->ActionFirst = ( Frame->ActionFirst ? Frame->ActionFirst : Action );
+#endif
 	return AML_TRUE;
 }
 
@@ -272,10 +282,12 @@ AmlStateSnapshotCommit(
 	)
 {
 	AML_STATE_SNAPSHOT*            Snapshot;
-	AML_STATE_SNAPSHOT_ITEM_FRAME* Frame;
-	AML_STATE_SNAPSHOT_ITEM*       Item;
 	SIZE_T                         PopCount;
 	SIZE_T                         i;
+#ifndef AML_BUILD_NO_SNAPSHOT_ITEMS
+	AML_STATE_SNAPSHOT_ITEM_FRAME* Frame;
+	AML_STATE_SNAPSHOT_ITEM*       Item;
+#endif
 
 	//
 	// We can only ever operate on the last snapshot created.
@@ -288,6 +300,7 @@ AmlStateSnapshotCommit(
 	//
 	// All linked items need to have their frames corresponding to this snapshot popped.
 	//
+#ifndef AML_BUILD_NO_SNAPSHOT_ITEMS
 	for( Frame = Snapshot->FrameFirst; Frame != NULL; Frame = Frame->SnapFrameNext ) {
 		//
 		// The snapshot must correspond to the last frame pushed for this item,
@@ -325,6 +338,7 @@ AmlStateSnapshotCommit(
 		//
 		AmlStateSnapshotItemRelease( Item );
 	}
+#endif
 
 	//
 	// Remove the snapshot from the state snapshot list.
@@ -411,6 +425,7 @@ AmlStateSnapshotRollback(
 	_Inout_ struct _AML_STATE* State
 	)
 {
+#ifndef AML_BUILD_NO_SNAPSHOT_ITEMS
 	AML_STATE_SNAPSHOT*            Snapshot;
 	AML_STATE_SNAPSHOT_ACTION*     Action;
 	AML_STATE_SNAPSHOT_ITEM*       Item;
@@ -484,10 +499,9 @@ AmlStateSnapshotRollback(
 		// perform the type-specific release call for the underlying item datum.
 		//
 		for( i = 0; i < Frame->Counter; i++ ) {
-			if( ( Item == NULL ) || ( Item->Valid == 0 ) ) {
+			if( Item->Valid == 0 ) {
 				break;
 			}
-#ifndef AML_BUILD_NO_SNAPSHOT_ITEMS
 			switch( Item->Type ) {
 			case AML_STATE_SNAPSHOT_ITEM_TYPE_BUFFER:
 				AML_DEBUG_TRACE( State, "Snapshot [%"PRId64"] releasing buffer: %p\n", Frame->Item->LevelIndex, Item->u.Buffer );
@@ -509,9 +523,9 @@ AmlStateSnapshotRollback(
 				AML_DEBUG_ERROR( State, "Error: Unsupported state snapshot item type!" );
 				break;
 			}
-#endif
 		}
 	}
+#endif
 
 	//
 	// Use commit to pop and free the snapshot level.
