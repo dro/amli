@@ -173,6 +173,8 @@ AmlTestMain(
 		} ) == AML_FALSE )
 	{
 		printf( "Error: AmlStateCreate failed!\n" );
+	FAIL_FREE_STATE:
+		AmlStateFree( &State );
 		return EXIT_FAILURE;
 	}
 
@@ -181,7 +183,7 @@ AmlTestMain(
 	//
 	if( AmlCreatePredefinedNamespaces( &State ) == AML_FALSE ) {
 		printf( "Error: AmlDecoderCreatePredefinedNamespaces failed!\n" );
-		return EXIT_FAILURE;
+		goto FAIL_FREE_STATE;
 	}
 	AmlCreatePredefinedObjects( &State );
 
@@ -191,7 +193,7 @@ AmlTestMain(
 	_Analysis_assume_( TableData != NULL );
 	if( AmlEvalLoadedTableCode( &State, TableData, TableDataSize, NULL ) == AML_FALSE ) {
 		printf( "Error: AmlEvalLoadedTableCode failed!\n" );
-		return EXIT_FAILURE;
+		goto FAIL_FREE_STATE;
 	}
 
 	//
@@ -224,7 +226,7 @@ AmlTestMain(
 					AmlDebugPrintDataValue( &State, AML_DEBUG_LEVEL_ERROR, TsfiValue );
 				}
 				AML_DEBUG_ERROR( &State, "\n" );
-				return EXIT_FAILURE;
+				goto FAIL_FREE_STATE;
 			}
 		}
 	}
