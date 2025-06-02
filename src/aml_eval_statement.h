@@ -3,6 +3,17 @@
 #include "aml_decoder.h"
 
 //
+// Controls the maximum amount of iterations of a while loop before forcefully terminating it.
+//
+#ifndef AML_BUILD_MAX_LOOP_ITERATIONS
+ #ifdef AML_BUILD_FUZZER
+  #define AML_BUILD_MAX_LOOP_ITERATIONS 10000
+ #else 
+  #define AML_BUILD_MAX_LOOP_ITERATIONS 1000000
+ #endif
+#endif
+
+//
 // Evaluate a DefIfElse instruction.
 // Predicate := TermArg => Integer
 // DefElse := Nothing | <elseop pkglength termlist>
