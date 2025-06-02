@@ -440,9 +440,9 @@ AmlNamespaceSearchRelativeName(
 	AML_NAME_STRING     PathPrefix2;
 
 	//
-	// Must be an unprefixed name with at most a single relative name segment.
+	// Must be an unprefixed name with a single relative name segment.
 	//
-	if( ( Name->Prefix.Length > 0 ) || ( Name->SegmentCount > 1 ) ) {
+	if( ( Name->Prefix.Length > 0 ) || ( Name->SegmentCount != 1 ) ) {
 		return NULL;
 	}
 
