@@ -40,10 +40,14 @@ AmlHeapAllocate(
 		AML_HEAP_SIZE_BITS <= AML_COUNTOF( Heap->Bins ),
 		"Insufficient heap bin count for platform SIZE_T"
 	);
-	LzCount  = ( Size ? AML_LZCNT64( Size ) : ( AML_HEAP_SIZE_BITS - 1 ) );
-	LzCount  = AML_MIN( LzCount, AML_HEAP_SIZE_BITS );
-	BinIndex = ( AML_HEAP_SIZE_BITS - LzCount );
-	Size     = ( ( SIZE_T )1 << BinIndex );
+	if( Size < UINT64_MAX ) {
+		LzCount  = ( Size ? AML_LZCNT64( Size ) : AML_HEAP_SIZE_BITS );
+		LzCount  = AML_MIN( LzCount, AML_HEAP_SIZE_BITS );
+		BinIndex = ( AML_HEAP_SIZE_BITS - LzCount );
+		Size     = ( ( SIZE_T )1 << BinIndex );
+	} else {
+		BinIndex = 64;
+	}
 
 	//
 	// If there is an existing freelist entry in the bin, pop it and use it.

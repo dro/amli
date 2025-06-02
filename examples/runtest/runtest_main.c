@@ -164,7 +164,9 @@ AmlTestExecuteSingleTable(
 	//
 	_Analysis_assume_( TableData != NULL );
 	if( AmlEvalLoadedTableCode( &State, TableData, TableDataSize, NULL ) == AML_FALSE ) {
+#ifndef AML_BUILD_FUZZER
 		printf( "Error: AmlEvalLoadedTableCode failed!\n" );
+#endif
 		goto FAIL_FREE_STATE;
 	}
 
@@ -177,7 +179,9 @@ AmlTestExecuteSingleTable(
 	//
 	// Dump the entire created namespace in hierarchical tree format.
 	//
+#ifndef AML_BUILD_FUZZER
 	AmlTestrintNamespaceTreeNode( &State, &State.Namespace.TreeRoot, 0 );
+#endif
 
 	//
 	// Test broadcasting _REG.
