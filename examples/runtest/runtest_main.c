@@ -240,7 +240,7 @@ main(
 	_In_count_( ArgC ) CHAR** ArgV
 	)
 {
-#if 0
+#if 1
 	if( ArgC < 2 ) {
 		printf(
 			"Invalid arguments.\n"
