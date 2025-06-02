@@ -490,7 +490,7 @@ AmlStateSnapshotRollback(
 #ifndef AML_BUILD_NO_SNAPSHOT_ITEMS
 			switch( Item->Type ) {
 			case AML_STATE_SNAPSHOT_ITEM_TYPE_BUFFER:
-				AML_DEBUG_TRACE( State, "Snapshot [%"PRId64"] releasing namespace buffer: %p\n", Frame->Item->LevelIndex, Item->u.Buffer );
+				AML_DEBUG_TRACE( State, "Snapshot [%"PRId64"] releasing buffer: %p\n", Frame->Item->LevelIndex, Item->u.Buffer );
 				AmlBufferDataRelease( Item->u.Buffer );
 				break;
 			case AML_STATE_SNAPSHOT_ITEM_TYPE_PACKAGE:

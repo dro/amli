@@ -12,6 +12,11 @@
 #include "aml_state_pass.h"
 
 //
+// There is currently a problem with this feature, forced to be disabled for now.
+//
+#define AML_BUILD_NO_SNAPSHOT_ITEMS
+
+//
 // AML state.
 //
 typedef struct _AML_STATE {
