@@ -15,24 +15,34 @@ jobs:
         
       - name: setup tools
         uses: actions/setup-python@v5
-      
-      - name: meson build
+
+      - name: meson build with sanitizers enabled (linux only)
+        if: matrix.os == 'ubuntu-latest'
         uses: BSFishy/meson-build@v1.0.3
         with:
           action: build
+          setup-options: '-Db_sanitize=address,undefined'
 
-      - name: Check if DSDT.aml exists
-        run: ls -l tests/feature_test_1
-        working-directory: ${{ github.workspace }}
-          
-      #- name: meson test
-      #  uses: BSFishy/meson-build@v1.0.3
-      #  with:
-      #    action: test
-      - name: meson test
+      - name: meson build with no sanitizers (OS other than linux)
+        if: matrix.os != 'ubuntu-latest'
+        uses: BSFishy/meson-build@v1.0.3
+        with:
+          action: build
+        
+      - name: run meson tests with sanitizers enabled (linux only)
+        id: meson-tests
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          meson test -C build || echo "Tests failed, uploading logs!"
+          export ASAN_OPTIONS=abort_on_error=1:detect_leaks=0:log_path=asan
+          export UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1
+          meson test -C build || echo "status=failed" >> $GITHUB_OUTPUT
         continue-on-error: true
+
+      - name: run meson tests with sanitizers disabled (windows only)
+        if: matrix.os == 'windows-latest'
+        uses: BSFishy/meson-build@v1.0.3
+        with:
+          action: test
 
       - name: upload meson test logs
         uses: actions/upload-artifact@v4
@@ -40,3 +50,7 @@ jobs:
         with:
           name: meson_test_log${{ matrix.os }}.txt
           path: build/meson-logs/testlog.txt
+
+      - name: fail job if any meson tests failed
+        if: steps.meson-tests.outputs.status != ''
+        run: exit 1
