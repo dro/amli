@@ -1,4 +1,4 @@
-# AMLI
+# AMLI [![CI](https://github.com/dro/amli/actions/workflows/main.yml/badge.svg)](https://github.com/dro/amli/actions/workflows/main.yml)
 
 AMLI is a lightweight feature-complete ACPI 6.5 AML interpreter.
 The code is designed for hypervisors or OSes that require AML evaluation support, but without an entire ACPI driver (or wish to implement their own).
