@@ -233,7 +233,7 @@
 #define AML_MAX(a,b) (((a) > (b)) ? (a) : (b))
 #define AML_MIN(a,b) (((a) < (b)) ? (a) : (b))
 #define AML_COUNTOF(Array) (sizeof((Array)) / sizeof((Array[0])))
-#define AML_CONTAINING_RECORD(Address, Type, Field) ((Type*)((CHAR*)(Address) - (UINT_PTR)(&((Type*)NULL)->Field)))
+#define AML_CONTAINING_RECORD(Address, Type, Field) ((Type*)((CHAR*)(Address) - offsetof(Type, Field)))
 
 //
 // Copy memory from two non-overlapping regions, mainly used for type punning.
