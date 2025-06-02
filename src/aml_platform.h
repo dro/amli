@@ -177,7 +177,9 @@
 //
 // Internal runtime assertion helper.
 //
-#define AML_ASSERT(x) (((x) == 0) ? AML_TRAP() : (VOID)0)
+#ifndef AML_ASSERT
+ #define AML_ASSERT(x) (((x) == 0) ? AML_TRAP() : (VOID)0)
+#endif
 
 //
 // Fix missing SAL annotation for certain build configurations.
