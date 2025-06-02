@@ -1,6 +1,10 @@
 #include "aml_heap.h"
 
 //
+// TODO: Improve heap allocator, add more bins inbetween pow2 values, implement splitting/coalescing of halves.
+//
+
+//
 // Initialize an AML heap allocator.
 //
 VOID
