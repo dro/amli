@@ -2265,6 +2265,14 @@ AmlEvalExpressionOpcode(
 		}
 
 		//
+		// Divide-by-zero exceptions are fatal.
+		//
+		if( Operand2.u.Integer == 0 ) {
+			AML_DEBUG_ERROR( State, "Error: division by zero\n" );
+			return AML_FALSE;
+		}
+
+		//
 		// Calculate quotient as main result, and write it out to the target.
 		//
 		Result = ( AML_DATA ){
@@ -2325,6 +2333,9 @@ AmlEvalExpressionOpcode(
 		break;
 	case AML_OPCODE_ID_MOD_OP:
 		if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+			return AML_FALSE;
+		} else if( Operand2.u.Integer == 0 ) {
+			AML_DEBUG_ERROR( State, "Error: mod divisor is zero.\n" );
 			return AML_FALSE;
 		}
 		Result = ( AML_DATA ){

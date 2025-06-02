@@ -18,6 +18,34 @@ AmlHeapInitialize(
 }
 
 //
+// Calculate the bin index that the given size fulls under.
+// Values will be placed into the tightest fitting pow2 bit indexed bin.
+//
+static
+SIZE_T
+AmlHeapBinIndexForSize(
+	_Inout_ AML_HEAP* Heap,
+	_In_    SIZE_T    Size
+	)
+{
+	SIZE_T LzCount;
+
+	//
+	// Calculate the closest bin index that equals or encompasses the input size.
+	// The result of LZCNT64 must be clamped to the maximum heap size bit count,
+	// for the case where AML_HEAP_SIZE_BITS < 64.
+	//
+	if( Size >= ( ( SIZE_T )1 << ( AML_HEAP_SIZE_BITS - 1 ) ) ) {
+		return ( AML_HEAP_SIZE_BITS - 1 );
+	} else if( Size == 0 ) {
+		return 0;
+	}
+	LzCount = AML_LZCNT64( Size - 1 );
+	LzCount = AML_MIN( LzCount, AML_HEAP_SIZE_BITS );
+	return ( AML_HEAP_SIZE_BITS - LzCount );
+}
+
+//
 // Allocate a block of memory of Size or larger.
 // The returned allocation is freed using AmlHeapFree.
 //
@@ -28,7 +56,6 @@ AmlHeapAllocate(
 	_In_    SIZE_T    Size
 	)
 {
-	SIZE_T              LzCount;
 	SIZE_T              BinIndex;
 	AML_HEAP_BIN_ENTRY* BinEntry;
 	SIZE_T              BlockSize;
@@ -45,14 +72,8 @@ AmlHeapAllocate(
 		AML_HEAP_SIZE_BITS <= AML_COUNTOF( Heap->Bins ),
 		"Insufficient heap bin count for platform SIZE_T"
 	);
-	if( Size < UINT64_MAX ) {
-		LzCount  = ( Size ? AML_LZCNT64( Size ) : AML_HEAP_SIZE_BITS );
-		LzCount  = AML_MIN( LzCount, AML_HEAP_SIZE_BITS );
-		BinIndex = ( AML_HEAP_SIZE_BITS - LzCount );
-		Size     = ( ( SIZE_T )1 << BinIndex );
-	} else {
-		BinIndex = 64;
-	}
+	BinIndex = AmlHeapBinIndexForSize( Heap, Size );
+	Size = ( ( SIZE_T )1 << BinIndex );
 
 	//
 	// If there is an existing freelist entry in the bin, pop it and use it.
@@ -118,13 +139,7 @@ AmlHeapFree(
 		AML_HEAP_SIZE_BITS <= AML_COUNTOF( Heap->Bins ),
 		"Insufficient heap bin count for platform SIZE_T"
 	);
-	if( BinEntry->DataSize < UINT64_MAX ) {
-		LzCount  = ( BinEntry->DataSize ? AML_LZCNT64( BinEntry->DataSize ) : AML_HEAP_SIZE_BITS );
-		LzCount  = AML_MIN( LzCount, AML_HEAP_SIZE_BITS );
-		BinIndex = ( AML_HEAP_SIZE_BITS - LzCount );
-	} else {
-		BinIndex = 64;
-	}
+	BinIndex = AmlHeapBinIndexForSize( Heap, BinEntry->DataSize );
 
 	//
 	// Add the block to the free-list of the fitting bin.
