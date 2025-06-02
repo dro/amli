@@ -81,19 +81,19 @@ AmlTestrintNamespaceTreeNode(
 //
 // Attempt to load and evaluate a table from the given file path.
 //
-_Success_( return == EXIT_SUCCESS )
+_Success_( return )
 static
-INT
-AmlTestMain(
-	_In_z_ const CHAR* FileName
+BOOLEAN
+AmlTestExecuteSingleTable(
+	_In_reads_bytes_( InputSize ) const UINT8* Input,
+	_In_                          SIZE_T       InputSize,
+	_In_                          BOOLEAN      IgnoreHeader
 	)
 {
 	AML_DESCRIPTION_HEADER TableHeader;
-	FILE*                  TableFile;
-	SIZE_T                 ReadSize;
-	VOID*                  TableData;
-	UINT32                 TableDataSize;
-	BOOLEAN                Success;
+	BOOLEAN                Use64BitInteger;
+	const UINT8*           TableData;
+	SIZE_T                 TableDataSize;
 	AML_ALLOCATOR          Allocator;
 	AML_STATE              State;
 	volatile LONG          AcpiGlobalLock;
@@ -102,64 +102,33 @@ AmlTestMain(
 	const AML_DATA*        TsfiValue;
 
 	//
-	// Attempt to open the given ACPI table file to execute (should be a DSDT or SSDT).
+	// The input data must be large enuogh to contain a table header.
 	//
-#ifdef _MSC_VER
-	if( fopen_s( &TableFile, FileName, "rb" ) != 0 ) {
-#else
-	if( ( TableFile = fopen( FileName, "rb" ) ) == NULL ) {
-#endif
-		perror( "Error" );
-		printf( "Error: Failed to open input file: %s\n", FileName );
-		return EXIT_FAILURE;
+	if( InputSize < sizeof( TableHeader ) ) {
+		printf( "Error: Failed to read input table header.\n" );
+		return AML_FALSE;
 	}
 
 	//
-	// Attempt to validate and load the full ACPI table.
+	// Validate the ACPI table header.
+	// The IgnoreHeader mode is used for fuzzing, ignores the table header,
+	// just uses anything after the header as input.
 	//
-	TableData = NULL;
-	do {
-		//
-		// Read and validate the ACPI table header.
-		//
-		Success = AML_FALSE;
-		ReadSize = fread( &TableHeader, 1, sizeof( TableHeader ), TableFile );
-		if( ReadSize != sizeof( TableHeader ) ) {
-			printf( "Error: Failed to read input table header.\n" );
-			break;
-		} else if( ( TableHeader.Signature != 0x54445344 ) && ( TableHeader.Signature != 0x54445353 ) ) {
+	AML_MEMCPY( &TableHeader, Input, sizeof( TableHeader ) );
+	if( IgnoreHeader == AML_FALSE ) {
+		if( ( TableHeader.Signature != 0x54445344 ) && ( TableHeader.Signature != 0x54445353 ) ) {
 			printf( "Error: Invalid input table signature (must be DSDT or SSDT).\n" );
-			break;
-		} else if( TableHeader.Length <= sizeof( TableHeader ) ) {
+			return AML_FALSE;
+		} else if( ( TableHeader.Length <= sizeof( TableHeader ) ) || ( TableHeader.Length > InputSize ) ) {
 			printf( "Error: Invalid input table size.\n" );
-			break;
+			return AML_FALSE;
 		}
-
-		//
-		// Attempt to read the rest of the data attached to the table.
-		//
 		TableDataSize = ( TableHeader.Length - sizeof( TableHeader ) );
-		TableData = malloc( TableDataSize );
-		if( TableData == NULL ) {
-			printf( "Error: Failed to allocate memory for full input table data.\n" );
-			break;
-		} else if( fread( TableData, 1, TableDataSize, TableFile ) != TableDataSize ) {
-			printf( "Error: Failed to read input table data.\n" );
-			break;
-		}
-		Success = AML_TRUE;
-	} while( 0 );
-	fclose( TableFile );
-
-	//
-	// Handle failure to load the input table.
-	//
-	if( Success == AML_FALSE ) {
-		if( TableData != NULL ) {
-			free( TableData );
-		}
-		return EXIT_FAILURE;
+	} else {
+		TableDataSize = ( InputSize - sizeof( TableHeader ) );
 	}
+	TableData = &Input[ sizeof( TableHeader ) ];
+	Use64BitInteger = ( TableHeader.Revision > 1 ); /* TODO: Maybe force to true when fuzzing. */
 
 	//
 	// Set up decoder and host interface.
@@ -172,16 +141,13 @@ AmlTestMain(
 		Allocator,
 		&( AML_STATE_PARAMETERS ){
 			.Host            = &Host,
-			.Use64BitInteger = ( TableHeader.Revision > 1 ),
+			.Use64BitInteger = Use64BitInteger,
 		} ) == AML_FALSE )
 	{
 		printf( "Error: AmlStateCreate failed!\n" );
 	FAIL_FREE_STATE:
 		AmlStateFree( &State );
-		if( TableData != NULL ) {
-			free( TableData );
-		}
-		return EXIT_FAILURE;
+		return AML_FALSE;
 	}
 
 	//
@@ -239,9 +205,114 @@ AmlTestMain(
 
 	printf( "\n\nAll test cases completed successfully.\n" );
 	AmlStateFree( &State );
-	free( TableData );
+	return AML_TRUE;
+}
+
+//
+// Attempt to load and evaluate a table from the given file path.
+//
+_Success_( return == EXIT_SUCCESS )
+static
+INT
+AmlTestMain(
+	_In_z_ const CHAR* FileName
+	)
+{
+	AML_DESCRIPTION_HEADER TableHeader;
+	FILE*                  TableFile;
+	UCHAR*                 TableData;
+	UINT32                 TableBodySize;
+	BOOLEAN                Success;
+
+	//
+	// Attempt to open the given ACPI table file to execute (should be a DSDT or SSDT).
+	//
+#ifdef _MSC_VER
+	if( fopen_s( &TableFile, FileName, "rb" ) != 0 ) {
+#else
+	if( ( TableFile = fopen( FileName, "rb" ) ) == NULL ) {
+#endif
+		perror( "Error" );
+		printf( "Error: Failed to open input file: %s\n", FileName );
+		return EXIT_FAILURE;
+	}
+
+	//
+	// Attempt to validate and load the full ACPI table.
+	//
+	TableData = NULL;
+	do {
+		//
+		// Read and validate the ACPI table header.
+		//
+		Success = AML_FALSE;
+		if( fread( &TableHeader, 1, sizeof( TableHeader ), TableFile ) != sizeof( TableHeader ) ) {
+			printf( "Error: Failed to read input table header.\n" );
+			break;
+		} else if( ( TableHeader.Signature != 0x54445344 ) && ( TableHeader.Signature != 0x54445353 ) ) {
+			printf( "Error: Invalid input table signature (must be DSDT or SSDT).\n" );
+			break;
+		} else if( TableHeader.Length <= sizeof( TableHeader ) ) {
+			printf( "Error: Invalid input table size.\n" );
+			break;
+		}
+
+		//
+		// Attempt to read the rest of the data attached to the table.
+		//
+		TableData = malloc( TableHeader.Length );
+		TableBodySize = ( TableHeader.Length - sizeof( TableHeader ) );
+		if( TableData == NULL ) {
+			printf( "Error: Failed to allocate memory for full input table data.\n" );
+			break;
+		} else if( fread( &TableData[ sizeof( TableHeader ) ], 1, TableBodySize, TableFile ) != TableBodySize ) {
+			printf( "Error: Failed to read input table body data.\n" );
+			break;
+		}
+
+		//
+		// Copy the header to the start of the new table allocation, as we read them separately.
+		//
+		AML_MEMCPY( TableData, &TableHeader, sizeof( TableHeader ) );
+
+		//
+		// Attempt to execute the actual test from the input table.
+		//
+		Success = AmlTestExecuteSingleTable( TableData, TableHeader.Length, AML_FALSE );
+	} while( 0 );
+	fclose( TableFile );
+
+	//
+	// Handle failure to load the input table.
+	//
+	if( Success == AML_FALSE ) {
+		if( TableData != NULL ) {
+			free( TableData );
+		}
+		return EXIT_FAILURE;
+	}
+
 	return EXIT_SUCCESS;
 }
+
+#ifdef AML_BUILD_FUZZER
+
+//
+// LLVM libfuzzer build test interface.
+//
+
+INT
+LLVMFuzzerTestOneInput(
+	_In_reads_bytes_( Size ) const UINT8* Data,
+	_In_                     SIZE_T       Size
+	)
+{
+	AmlTestExecuteSingleTable( Data, Size, AML_TRUE );
+	return 0;
+}
+
+int LLVMFuzzerRunDriver( int* argc, char*** argv,
+						 int ( *UserCb )( const uint8_t* Data, size_t Size ) );
 
 _Success_( return == EXIT_SUCCESS )
 INT
@@ -250,6 +321,23 @@ main(
 	_In_count_( ArgC ) CHAR** ArgV
 	)
 {
+	return LLVMFuzzerRunDriver( &ArgC, &ArgV, LLVMFuzzerTestOneInput );
+}
+
+#else
+
+//
+// Regular command-line application build.
+//
+
+_Success_( return == EXIT_SUCCESS )
+INT
+main(
+	_In_               INT    ArgC,
+	_In_count_( ArgC ) CHAR** ArgV
+	)
+{
+
 #ifndef AML_BUILD_LOCAL_DEV_TEST
 	if( ArgC < 2 ) {
 		printf(
@@ -263,3 +351,5 @@ main(
 	return AmlTestMain( "C:\\iasl\\test2.aml" );
 #endif
 }
+
+#endif

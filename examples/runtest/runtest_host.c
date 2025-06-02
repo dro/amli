@@ -49,10 +49,18 @@
 // Host debug print helpers.
 //
 #ifndef AML_HOST_PRINTF
- #define AML_HOST_PRINTF(...) printf(__VA_ARGS__)
+ #ifndef AML_BUILD_FUZZER
+  #define AML_HOST_PRINTF(...) printf(__VA_ARGS__)
+ #else
+  #define AML_HOST_PRINTF(...) ((VOID)0)
+ #endif
 #endif
 #ifndef AML_HOST_VPRINTF
- #define AML_HOST_VPRINTF(...) vprintf(__VA_ARGS__)
+ #ifndef AML_BUILD_FUZZER
+  #define AML_HOST_VPRINTF(...) vprintf(__VA_ARGS__)
+ #else
+  #define AML_HOST_VPRINTF(...) ((VOID)0)
+ #endif
 #endif
 
 //
