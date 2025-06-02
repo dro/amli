@@ -40,7 +40,7 @@ AmlHeapBinIndexForSize(
 	} else if( Size == 0 ) {
 		return 0;
 	}
-	LzCount = AML_LZCNT64( Size - 1 );
+	LzCount = AML_LZCNT64( AML_MIN( Size, 2 ) );
 	LzCount = AML_MIN( LzCount, AML_HEAP_SIZE_BITS );
 	return ( AML_HEAP_SIZE_BITS - LzCount );
 }
