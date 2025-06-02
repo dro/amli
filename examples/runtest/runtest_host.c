@@ -461,7 +461,7 @@ AmlHostMonotonicTimer(
 	// Read stub timer value, not spec adherent (not 100ns).
 	//
 	Value = ( AML_RDTSC() / 400 );
-	AML_HOST_PRINTF( "Host: Read from monotonic timer: 0x%"PRIx64"\n", Value );
+	// AML_HOST_PRINTF( "Host: Read from monotonic timer: 0x%"PRIx64"\n", Value );
 	return Value;
 }
 
