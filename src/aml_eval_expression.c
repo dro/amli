@@ -851,6 +851,13 @@ AmlFindSetLeftBit(
 	IsInteger32Mask = ( 1 + ~( ( UINT64 )IsInteger32 & 1 ) );
 
 	//
+	// A result of 0 means no bit was set.
+	//
+	if( ( Value & IsInteger32Mask ) == 0 ) {
+		return 0;
+	}
+
+	//
 	// Strip the upper 32 bits of the 64 bit value if IsInteger32 is enabled.
 	//
 	Value &= ~( ( 0xFFFFFFFFull << 32ull ) & IsInteger32Mask );
@@ -897,6 +904,13 @@ AmlFindSetRightBit(
 	//
 	IsInteger32 = ( IsInteger32 ? 1 : 0 );
 	IsInteger32Mask = ( ~( ( UINT64 )IsInteger32 & 1 ) + 1 );
+
+	//
+	// A result of 0 means no bit was set.
+	//
+	if( ( Value & IsInteger32Mask ) == 0 ) {
+		return 0;
+	}
 
 	//
 	// Force the upper 32 bits of the 64 bit value to be set if IsInteger32 is enabled.
