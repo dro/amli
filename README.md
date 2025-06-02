@@ -2,6 +2,7 @@
 
 AMLI is a lightweight feature-complete ACPI 6.5 AML interpreter.
 The code is designed for hypervisors or OSes that require AML evaluation support, but without an entire ACPI driver (or wish to implement their own).
+The project is in active development, any errors should be reported via issues, ideally alongside a copy of the AML bytecode/tables that trigger the issue.
 
 ---
 
