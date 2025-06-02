@@ -232,6 +232,7 @@ AmlTestMain(
 	}
 
 	printf( "\n\nAll test cases completed successfully.\n" );
+	AmlStateFree( &State );
 	return EXIT_SUCCESS;
 }
 
