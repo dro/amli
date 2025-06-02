@@ -21,7 +21,7 @@ jobs:
         uses: BSFishy/meson-build@v1.0.3
         with:
           action: build
-          options: "-Db_sanitize=address,undefined"
+          setup-options: '-Db_sanitize=address,undefined'
 
       - name: meson build with no sanitizers (OS other than linux)
         if: matrix.os != 'ubuntu-latest'
