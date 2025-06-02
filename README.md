@@ -18,7 +18,6 @@ The project is in active development, any errors should be reported via issues, 
 - All platform-specific code is handled by the host (including GlobalLock interaction, table access).
 - Lazy mapping of entire MMIO operation regions upon first access (no map/unmap for each field access).
 - Helpers for device initialization, PCI information.
-- State snapshot system that rolls back created namespace nodes upon failure of certain key subroutines.
 
 ## Limitations
 - Currently a recursive implementation, users should take care to properly have a guard-page protected stack (and possibly grow the stack).
