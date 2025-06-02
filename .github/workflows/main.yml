@@ -1,0 +1,27 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  clang-ci:
+    runs-on: ${{ matrix.os }}
+  
+    strategy:
+      matrix: 
+        os: [ubuntu-latest, windows-latest]
+        
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        
+      - name: setup tools
+        uses: actions/setup-python@v5
+      
+      - name: meson build
+        uses: BSFishy/meson-build@v1.0.3
+        with:
+          action: build 
+          
+      - name: meson test
+        uses: BSFishy/meson-build@v1.0.3
+        with:
+          action: test 
