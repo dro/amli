@@ -76,6 +76,9 @@ AmlCompleteInitialLoad( &State, AML_TRUE );
 All platform-specific intrinsics/helpers defined in `aml_platform.h` can be overridden. 
 Other than these, some special preprocessor defines exist to control the build and certain features at compile-time.
 
+### `AML_BUILD_HOST_PLATFORM_HEADER`
+Causes `aml_platform.h` to include a user-supplied `aml_host_platform.h`, allowing the user to override any desired platform definitions.
+
 ### `AML_BUILD_DEBUG_LEVEL`
 Change the minimum debug logging verbosity level at compile-time. Possible values:
 - `AML_DEBUG_LEVEL_TRACE`
