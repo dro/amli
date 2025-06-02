@@ -24,4 +24,11 @@ jobs:
       - name: meson test
         uses: BSFishy/meson-build@v1.0.3
         with:
-          action: test 
+          action: test
+
+      - name: upload meson test logs
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: meson_test_log${{ matrix.os }}.txt
+          path: build/meson-logs/testlog.txt
