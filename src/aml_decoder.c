@@ -912,7 +912,9 @@ AmlDecoderConsumeNameString(
 		//
 		// Consume any prefix bytes.
 		//
-		AmlDecoderConsumeByte( State, NULL );
+		if( AmlDecoderConsumeByte( State, NULL ) == AML_FALSE ) {
+			return AML_FALSE;
+		}
 		Prefix.Data[ Prefix.Length++ ] = LastPrefixChar;
 	}
 
