@@ -43,3 +43,15 @@ AmlMemorySet(
 
 	return Destination;
 }
+
+//
+// RotateLeft32 helper for platforms where an intrinsic couldn't be found.
+//
+UINT32
+AmlRotateLeft32(
+	_In_ UINT32 Value,
+	_In_ UINT32 Shift
+	)
+{
+	return ( ( Value << Shift ) | ( Value >> ( 32 - Shift ) ) );
+}

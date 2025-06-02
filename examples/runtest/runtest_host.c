@@ -23,8 +23,26 @@
  #endif
 #endif
 #ifndef AML_ATOMIC_COMPARE_EXCHANGE_32
- #define AML_ATOMIC_COMPARE_EXCHANGE_32(pLongDestination, LongDesired, LongComparand) \
-  _InterlockedCompareExchange((pLongDestination), (LongDesired), (LongComparand))
+ #ifdef _MSC_VER
+  #define AML_ATOMIC_COMPARE_EXCHANGE_32(pLongDestination, LongDesired, LongComparand) \
+   _InterlockedCompareExchange((pLongDestination), (LongDesired), (LongComparand))
+ #endif
+#endif
+
+//
+// RDTSC intrinsic.
+//
+#ifndef AML_RDTSC
+ #ifdef __has_builtin
+  #if __has_builtin(__builtin_ia32_rdtsc)
+   #define AML_RDTSC() __builtin_ia32_rdtsc()
+  #endif
+ #endif
+#endif
+#ifndef AML_RDTSC
+ #ifdef _MSC_VER
+  #define AML_RDTSC() __rdtsc()
+ #endif
 #endif
 
 //
@@ -260,7 +278,7 @@ AmlHostMutexCreate(
 	_Out_   UINT64*           MutexHandleOutput
 	)
 {
-	*MutexHandleOutput = __rdtsc();
+	*MutexHandleOutput = AML_RDTSC();
 	AML_HOST_PRINTF( "Host: Creating internal mutex object: 0x%"PRIx64"\n", *MutexHandleOutput );
 	return AML_TRUE;
 }
@@ -422,8 +440,8 @@ AmlHostStall(
 	//
 	AML_HOST_PRINTF( "Host: Stalling for %"PRId64" microsecond(s).\n", Microseconds );
 	Microseconds = AML_MIN( Microseconds, ( 100 + 50 ) );
-	End = ( ( __rdtsc() / 400 ) + ( Microseconds * 1000 ) );
-	while( ( __rdtsc() / 400 ) < End ) {
+	End = ( AmlHostMonotonicTimer( Host ) + ( Microseconds * 1000 ) );
+	while( AmlHostMonotonicTimer( Host ) < End ) {
 		AML_PAUSE();
 	}
 }
@@ -442,7 +460,7 @@ AmlHostMonotonicTimer(
 	//
 	// Read stub timer value, not spec adherent (not 100ns).
 	//
-	Value = ( __rdtsc() / 400 );
+	Value = ( AML_RDTSC() / 400 );
 	AML_HOST_PRINTF( "Host: Read from monotonic timer: 0x%"PRIx64"\n", Value );
 	return Value;
 }

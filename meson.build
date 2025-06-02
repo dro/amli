@@ -41,3 +41,6 @@ runtest = executable(
     include_directories: runtest_inc,
     build_by_default: not meson.is_subproject()
 )
+
+# Define all test cases.
+test('feature test', runtest, args : ['tests/feature_test_1/DSDT.aml'])
