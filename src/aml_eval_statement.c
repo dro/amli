@@ -144,6 +144,7 @@ AmlEvalWhile(
 	SIZE_T                 TermListStart;
 	SIZE_T                 TermListSize;
 	AML_DATA               Predicate;
+	SIZE_T                 i;
 	AML_INTERRUPTION_EVENT OldPendingEvent;
 	AML_INTERRUPTION_EVENT PendingEvent;
 
@@ -188,12 +189,20 @@ AmlEvalWhile(
 	//
 	// While the predicate remains true, keep executing the term list until reaching a break or continue statement.
 	//
-	while( Predicate.u.Integer ) {
+	for( i = 0; Predicate.u.Integer != 0; i++ ) {
+		//
+		// Infinite Break out of the loop if we have possibly encountered an infinite loop.
+		//
+		if( i >= AML_BUILD_MAX_LOOP_ITERATIONS ) {
+			AML_DEBUG_ERROR( State, "Error: Exceeded maximum loop iteration count (possible infinite loop).\n" );
+			return AML_FALSE;
+		}
+
 		//
 		// Increase while loop nesting level.
 		//
 		if( State->WhileLoopLevel == SIZE_MAX ) {
-			AML_DEBUG_PANIC( State, "Fatal: reached maximum while loop nesting level\n" );
+			AML_DEBUG_ERROR( State, "Error: Reached maximum while loop nesting level.\n" );
 			return AML_FALSE;
 		}
 		State->WhileLoopLevel++;
