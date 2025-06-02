@@ -92,6 +92,7 @@ AmlHeapFree(
 	)
 {
 	AML_HEAP_BIN_ENTRY* BinEntry;
+	SIZE_T              LzCount;
 	SIZE_T              BinIndex;
 
 	//
@@ -107,7 +108,13 @@ AmlHeapFree(
 		AML_HEAP_SIZE_BITS <= AML_COUNTOF( Heap->Bins ),
 		"Insufficient heap bin count for platform SIZE_T"
 	);
-	BinIndex = ( AML_HEAP_SIZE_BITS - AML_LZCNT64( BinEntry->DataSize ) );
+	if( BinEntry->DataSize < UINT64_MAX ) {
+		LzCount  = ( BinEntry->DataSize ? AML_LZCNT64( BinEntry->DataSize ) : AML_HEAP_SIZE_BITS );
+		LzCount  = AML_MIN( LzCount, AML_HEAP_SIZE_BITS );
+		BinIndex = ( AML_HEAP_SIZE_BITS - LzCount );
+	} else {
+		BinIndex = 64;
+	}
 
 	//
 	// Add the block to the free-list of the fitting bin.

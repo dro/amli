@@ -475,7 +475,7 @@ AmlStateSnapshotRollback(
 	//
 	for( Frame = Snapshot->FrameFirst; Frame != NULL; Frame = Frame->SnapFrameNext ) {
 		Item = Frame->Item;
-		if( Item->Valid == 0 ) {
+		if( ( Item == NULL ) || ( Item->Valid == 0 ) ) {
 			continue;
 		}
 
@@ -484,7 +484,7 @@ AmlStateSnapshotRollback(
 		// perform the type-specific release call for the underlying item datum.
 		//
 		for( i = 0; i < Frame->Counter; i++ ) {
-			if( Item->Valid == 0 ) {
+			if( ( Item == NULL ) || ( Item->Valid == 0 ) ) {
 				break;
 			}
 #ifndef AML_BUILD_NO_SNAPSHOT_ITEMS
