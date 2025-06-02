@@ -13,8 +13,7 @@ static
 UINT32
 AmlMurmur3GetBlock(
 	_In_ const UCHAR* Data,
-	_In_ INT32        BlockCount,
-	_In_ INT32        BlockIndex
+	_In_ SIZE_T       BlockIndex
 	)
 {
 	UINT32 BlockValue;
@@ -24,7 +23,7 @@ AmlMurmur3GetBlock(
 	//
 	AML_MEMCPY(
 		&BlockValue,
-		&Data[ ( BlockCount + BlockIndex ) * sizeof( UINT32 ) ],
+		&Data[ BlockIndex * sizeof( UINT32 ) ],
 		sizeof( BlockValue )
 	);
 
@@ -60,10 +59,10 @@ AmlMurmur3Hash32(
 	)
 {
 	const UCHAR*  Data;
-	INT32         BlockCount;
+	SIZE_T        BlockCount;
 	UINT32        K1;
 	UINT32        Hash;
-	INT32         i;
+	SIZE_T        i;
 	const UCHAR*  DataTail;
 
 	//
@@ -74,14 +73,14 @@ AmlMurmur3Hash32(
 	//
 	// Convert KeyLength to block count.
 	//
-	BlockCount = ( INT32 )( KeyLength / sizeof( UINT32 ) );
+	BlockCount = ( KeyLength / sizeof( UINT32 ) );
 
 	//
 	// Body, hash multiples of 32 bits.
 	//
 	Data = Key;
-	for( i = -BlockCount; i; i++ ) {
-		K1    = AmlMurmur3GetBlock( Data, BlockCount, i );
+	for( i = 0; i < BlockCount; i++ ) {
+		K1    = AmlMurmur3GetBlock( Data, i );
 		K1   *= 0xcc9e2d51;
 		K1    = AML_ROL32( K1, 15 );
 		K1   *= 0x1b873593;
