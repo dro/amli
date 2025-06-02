@@ -109,7 +109,8 @@ AmlTestMain(
 #else
 	if( ( TableFile = fopen( FileName, "rb" ) ) == NULL ) {
 #endif
-		printf( "Error: Failed to open input file.\n" );
+		perror( "Error" );
+		printf( "Error: Failed to open input file: %s\n", FileName );
 		return EXIT_FAILURE;
 	}
 
