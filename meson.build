@@ -1,4 +1,14 @@
-project('amli', 'c')
+# AMLI project definition, enable sanitizers by default (for examples/tests).
+project(
+    'amli',
+    'c',
+    default_options: [
+        'c_std=c11',
+        'b_sanitize=address,undefined'
+    ] 
+)
+
+# Full library source file listing.
 src = files(
     'src/aml_arena.c',
     'src/aml_base.c',
