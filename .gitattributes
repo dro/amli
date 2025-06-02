@@ -1,0 +1,4 @@
+# Ignore testcase ASL/AML files in project language percentage.
+*.asl linguist-generated
+*.aml linguist-generated
+tests/feature_test_1/*.asl -linguist-generated
