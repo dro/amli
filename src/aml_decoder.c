@@ -1323,7 +1323,7 @@ AmlDecoderConsumeDataRefObject(
 	//
 	// Shouldn't happen, not sure this is even possible anymore.
 	//
-	AML_DEBUG_PANIC( State, "Fatal: AmlDecoderMatchDataRefObject/ObjectReference case" );
+	AML_DEBUG_ERROR( State, "Error: AmlDecoderMatchDataRefObject/ObjectReference case" );
 	return AML_FALSE;
 }
 
