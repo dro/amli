@@ -6,11 +6,30 @@
 #ifndef AML_BUILD_OVERRIDE_HASH
 
 //
-// Read murmur3 state block.
+// Read murmur3 input block.
 // If platform/implementation requires endian swapping, do it here.
-// Note: This is never currently needed as the hash sums only need to be consistent for this environment.
 //
-#define AML_MURMUR3_GET_BLOCK(p, i) ((p)[(i)])
+static
+UINT32
+AmlMurmur3GetBlock(
+	_In_ const UCHAR* Data,
+	_In_ INT32        BlockCount,
+	_In_ INT32        BlockIndex
+	)
+{
+	UINT32 BlockValue;
+
+	//
+	// Avoid unaligned/aliased/UB access to the input data by using memcpy instead of a UINT32 dereference.
+	//
+	AML_MEMCPY(
+		&BlockValue,
+		&Data[ ( BlockCount + BlockIndex ) * sizeof( UINT32 ) ],
+		sizeof( BlockValue )
+	);
+
+	return BlockValue;
+}
 
 //
 // Force all bits of a 32-bit hash sum to avalanche.
@@ -40,13 +59,12 @@ AmlMurmur3Hash32(
 	_In_                          UINT32      Seed
 	)
 {
-	const UINT8*  Data;
+	const UCHAR*  Data;
 	INT32         BlockCount;
-	const UINT32* Blocks;
 	UINT32        K1;
 	UINT32        Hash;
 	INT32         i;
-	const UINT8*  DataTail;
+	const UCHAR*  DataTail;
 
 	//
 	// Key the hash with the seed.
@@ -59,16 +77,11 @@ AmlMurmur3Hash32(
 	BlockCount = ( INT32 )( KeyLength / sizeof( UINT32 ) );
 
 	//
-	// Calculate address of last block.
-	//
-	Data   = ( const UINT8* )Key;
-	Blocks = ( const UINT32* )( &Data[ BlockCount * sizeof( UINT32 ) ] );
-
-	//
 	// Body, hash multiples of 32 bits.
 	//
+	Data = Key;
 	for( i = -BlockCount; i; i++ ) {
-		K1    = AML_MURMUR3_GET_BLOCK( Blocks, i );
+		K1    = AmlMurmur3GetBlock( Data, BlockCount, i );
 		K1   *= 0xcc9e2d51;
 		K1    = AML_ROL32( K1, 15 );
 		K1   *= 0x1b873593;

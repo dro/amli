@@ -155,6 +155,9 @@ AmlTestMain(
 	// Handle failure to load the input table.
 	//
 	if( Success == AML_FALSE ) {
+		if( TableData != NULL ) {
+			free( TableData );
+		}
 		return EXIT_FAILURE;
 	}
 
@@ -175,6 +178,9 @@ AmlTestMain(
 		printf( "Error: AmlStateCreate failed!\n" );
 	FAIL_FREE_STATE:
 		AmlStateFree( &State );
+		if( TableData != NULL ) {
+			free( TableData );
+		}
 		return EXIT_FAILURE;
 	}
 
@@ -233,6 +239,7 @@ AmlTestMain(
 
 	printf( "\n\nAll test cases completed successfully.\n" );
 	AmlStateFree( &State );
+	free( TableData );
 	return EXIT_SUCCESS;
 }
 
@@ -243,7 +250,7 @@ main(
 	_In_count_( ArgC ) CHAR** ArgV
 	)
 {
-#if 1
+#ifndef AML_BUILD_LOCAL_DEV_TEST
 	if( ArgC < 2 ) {
 		printf(
 			"Invalid arguments.\n"
