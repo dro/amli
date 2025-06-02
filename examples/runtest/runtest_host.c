@@ -332,7 +332,7 @@ AmlHostEventCreate(
 	_Out_   UINT64*           EventHandleOutput
 	)
 {
-	*EventHandleOutput = __rdtsc();
+	*EventHandleOutput = AML_RDTSC();
 	AML_HOST_PRINTF( "Host: Creating internal event object: 0x%"PRIx64"\n", *EventHandleOutput );
 	return AML_TRUE;
 }

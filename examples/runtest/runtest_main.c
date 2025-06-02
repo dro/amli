@@ -104,7 +104,11 @@ AmlTestMain(
 	//
 	// Attempt to open the given ACPI table file to execute (should be a DSDT or SSDT).
 	//
+#ifdef _MSC_VER
 	if( fopen_s( &TableFile, FileName, "rb" ) != 0 ) {
+#else
+	if( ( TableFile = fopen( FileName, "rb" ) ) == NULL ) {
+#endif
 		printf( "Error: Failed to open input file.\n" );
 		return EXIT_FAILURE;
 	}
