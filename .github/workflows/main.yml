@@ -34,7 +34,7 @@ jobs:
         run: |
           export ASAN_OPTIONS=abort_on_error=1:detect_leaks=0:log_path=asan
           export UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1
-          meson test -C build"
+          meson test -C build
         continue-on-error: true
 
       - name: run meson tests with sanitizers disabled (windows only)
