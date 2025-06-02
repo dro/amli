@@ -114,6 +114,13 @@
 #endif
 
 //
+// No rotate left intrinsic found, use internal implementation.
+//
+#ifndef AML_ROL32
+ #define AML_ROL32(Value, Shift) AmlRotateLeft32((Value), (Shift))
+#endif
+
+//
 // Implement AML_BSWAP32 using __builtin_bswap32 if advertised through __has_builtin (GCC/clang).
 //
 #ifndef AML_BSWAP32
@@ -302,3 +309,12 @@ AmlMemorySet(
     _In_                           INT    Value,
     _In_                           SIZE_T Size
     );
+
+//
+// RotateLeft32 helper for platforms where an intrinsic couldn't be found.
+//
+UINT32
+AmlRotateLeft32(
+	_In_ UINT32 Value,
+	_In_ UINT32 Shift
+	);

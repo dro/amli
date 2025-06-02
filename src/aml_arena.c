@@ -456,7 +456,7 @@ AmlArenaAllocateZeroInitialized(
 	//
 	// Allocate and zero initialize.
 	//
-	if( ( Allocation = AmlArenaAllocate( Arena, DataSize ) ) == AML_FALSE ) {
+	if( ( Allocation = AmlArenaAllocate( Arena, DataSize ) ) == NULL ) {
 		return NULL;
 	}
 	AML_MEMSET( Allocation, 0, DataSize );
@@ -479,7 +479,7 @@ AmlArenaAllocateCopy(
 	//
 	// Allocate and copy.
 	//
-	if( ( Allocation = AmlArenaAllocate( Arena, DataSize ) ) == AML_FALSE ) {
+	if( ( Allocation = AmlArenaAllocate( Arena, DataSize ) ) == NULL ) {
 		return NULL;
 	}
 	AML_MEMCPY( Allocation, DataInput, DataSize );
