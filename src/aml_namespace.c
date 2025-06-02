@@ -589,6 +589,13 @@ AmlNamespaceSearch(
 	}
 
 	//
+	// Failed to locate the given name.
+	//
+	if( FoundNode == NULL ) {
+		return AML_FALSE;
+	}
+
+	//
 	// Return the final found and fully resolved node.
 	//
 	*ppFoundNode = FoundNode;
