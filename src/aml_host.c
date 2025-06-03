@@ -3,7 +3,7 @@
 #include "aml_namespace.h"
 
 //
-// Example stub implementation of an AML host interface.c.
+// Example stub implementation of an AML host interface.
 //
 #if 0
 
