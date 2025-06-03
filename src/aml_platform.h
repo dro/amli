@@ -14,6 +14,26 @@
 #endif
 
 //
+// Try to automatically determine if ASAN is supported and enabled.
+//
+#ifndef AML_BUILD_ASAN
+ #if defined(__SANITIZE_ADDRESS__)
+  #define AML_BUILD_ASAN
+ #elif defined(__has_feature)
+  #if __has_feature(address_sanitizer)
+   #define AML_BUILD_ASAN
+  #endif
+ #endif
+#endif
+
+//
+// Include the ASAN interface if ASAN is enabled (for poison/unpoison).
+//
+#ifdef AML_BUILD_ASAN
+ #include <sanitizer/asan_interface.h>
+#endif
+
+//
 // Include compiler intrinsic definitions on MSVC build.
 //
 #ifdef _MSC_VER
@@ -234,6 +254,17 @@
 #define AML_MIN(a,b) (((a) < (b)) ? (a) : (b))
 #define AML_COUNTOF(Array) (sizeof((Array)) / sizeof((Array[0])))
 #define AML_CONTAINING_RECORD(Address, Type, Field) ((Type*)((CHAR*)(Address) - offsetof(Type, Field)))
+
+//
+// Setup ASAN helper macros if ASAN is enabled.
+//
+#ifdef AML_BUILD_ASAN
+ #define AML_ASAN_POISON_MEMORY_REGION(Address, Size) __asan_poison_memory_region((Address), (Size))
+ #define AML_ASAN_UNPOISON_MEMORY_REGION(Address, Size) __asan_unpoison_memory_region((Address), (Size))
+#else
+ #define AML_ASAN_POISON_MEMORY_REGION(Address, Size) ((void)(Address), (void)(Size))
+ #define AML_ASAN_UNPOISON_MEMORY_REGION(Address, Size) ((void)(Address), (void)(Size))
+#endif 
 
 //
 // Copy memory from two non-overlapping regions, mainly used for type punning.

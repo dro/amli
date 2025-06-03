@@ -2,6 +2,15 @@
 #include <stdlib.h>
 
 //
+// Allocate extra space for a redzone at the end of heap allocations on the ASAN build.
+//
+#ifdef AML_BUILD_ASAN
+ #define AML_HEAP_REDZONE_SIZE 16
+#else
+ #define AML_HEAP_REDZONE_SIZE 0
+#endif
+
+//
 // TODO: Improve heap allocator, add more bins inbetween pow2 values, implement splitting/coalescing of halves.
 //
 
@@ -62,10 +71,6 @@ AmlHeapAllocate(
 	AML_HEAP_BIN_ENTRY* BinEntry;
 	SIZE_T              BlockSize;
 
-#if AML_BUILD_FUZZER
-	return malloc( Size );
-#endif
-
 	//
 	// Get closest fitting upward bin for the given size
 	// and round up size to the bin-size for this index.
@@ -81,18 +86,33 @@ AmlHeapAllocate(
 	// If there is an existing freelist entry in the bin, pop it and use it.
 	//
 	if( ( BinEntry = Heap->Bins[ BinIndex ] ) != NULL ) {
+		//
+		// The entire block must be unpoisoned before access,
+		// all freed blocks will be completely poisoned until re-use.
+		//
+		AML_ASAN_UNPOISON_MEMORY_REGION( BinEntry, sizeof( *BinEntry ) );
+		AML_ASAN_UNPOISON_MEMORY_REGION( &BinEntry->Data[ 0 ], BinEntry->DataSize );
+
+		//
+		// Pop the found block from the bin.
+		//
 		BinEntry->Next = NULL;
 		Heap->Bins[ BinIndex ] = BinEntry->Next;
+
+		//
+		// Poison the block header until the block is freed again.
+		//
+		AML_ASAN_POISON_MEMORY_REGION( BinEntry, sizeof( *BinEntry ) );
 		return BinEntry->Data;
 	}
 
 	//
 	// Allocate a new heap block for the given size.
 	//
-	if( Size > ( SIZE_MAX - sizeof( *BinEntry ) ) ) {
+	if( Size > ( SIZE_MAX - sizeof( *BinEntry ) - AML_HEAP_REDZONE_SIZE ) ) {
 		return NULL;
 	}
-	BlockSize = ( sizeof( *BinEntry ) + Size );
+	BlockSize = ( sizeof( *BinEntry ) + Size + AML_HEAP_REDZONE_SIZE );
 	if( ( BinEntry = AmlArenaAllocate( Heap->Arena, BlockSize ) ) == NULL ) {
 		return NULL;
 	}
@@ -102,6 +122,13 @@ AmlHeapAllocate(
 	//
 	BinEntry->Next     = NULL;
 	BinEntry->DataSize = Size;
+
+	//
+	// Poison the allocation's block header and redzone on the ASAN build.
+	// The block header will be unpoisoned once the block has been freed.
+	//
+	AML_ASAN_POISON_MEMORY_REGION( &BinEntry->Data[ BinEntry->DataSize ], AML_HEAP_REDZONE_SIZE );
+	AML_ASAN_POISON_MEMORY_REGION( BinEntry, sizeof( *BinEntry ) );
 
 	//
 	// Return allocated block data.
@@ -122,16 +149,16 @@ AmlHeapFree(
 	AML_HEAP_BIN_ENTRY* BinEntry;
 	SIZE_T              BinIndex;
 
-#ifdef AML_BUILD_FUZZER
-	free( AllocationData );
-	return;
-#endif
-
 	//
 	// Get the chunk header of the given allocation data.
 	// Note: this is only valid if AllocationData was returned by AmlHeapAllocate.
 	//
 	BinEntry = AML_CONTAINING_RECORD( AllocationData, AML_HEAP_BIN_ENTRY, Data );
+
+	//
+	// Unpoison the allocation's block header before accessing it.
+	//
+	AML_ASAN_UNPOISON_MEMORY_REGION( BinEntry, sizeof( *BinEntry ) );
 
 	//
 	// Get closest fitting bin for the allocation block size.
@@ -147,4 +174,9 @@ AmlHeapFree(
 	//
 	BinEntry->Next = Heap->Bins[ BinIndex ];
 	Heap->Bins[ BinIndex ] = BinEntry;
+
+	//
+	// We have finished accessing the free block, poison the entire thing until it is reused.
+	//
+	AML_ASAN_POISON_MEMORY_REGION( BinEntry, ( BinEntry->DataSize + sizeof( *BinEntry ) ) );
 }
