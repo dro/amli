@@ -10,7 +10,11 @@
 // Allows the user to include a custom platform header that may override some of our definitions.
 //
 #ifdef AML_BUILD_HOST_PLATFORM_HEADER
- #include "aml_host_platform.h"
+ #ifdef AML_BUILD_HOST_PLATFORM_HEADER_NAME
+  #include AML_BUILD_HOST_PLATFORM_HEADER_NAME
+ #else
+  #include "aml_host_platform.h"
+ #endif
 #endif
 
 //
