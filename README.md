@@ -95,9 +95,18 @@ Allows the user to integrate their own hashing function, the user must implement
 ### `AML_BUILD_OVERRIDE_INTEGER_TYPES`
 Allows the user to override the base integer types used in `aml_platform.h`
 
+### `AML_BUILD_OVERRIDE_STRING_CONV`
+Allows the user to integrate their own string conversion functions, the user must implement all functions defined in `aml_string_conv.h`.
+
 ### `AML_BUILD_NO_SNAPSHOT_ITEMS`
 Disables snapshot rollback of state items, can be useful to help debugging in some cases.
 
-### `AML_BUILD_OVERRIDE_STRING_CONV`
-Allows the user to integrate their own string conversion functions, the user must implement all functions defined in `aml_string_conv.h`.
+### `AML_BUILD_MAX_RECURSION_DEPTH`
+Specifies the maximum evaluation and decoder recursion depth before producing an error.
+
+### `AML_BUILD_MAX_LOOP_ITERATIONS`
+Specifies the maximum iterations in a while loop before producing an error (presumably due to an infinite loop).
+
+### `AML_BUILD_FUZZER`
+Enable libfuzzer interfaces and remove debug prints.
 
