@@ -23,6 +23,7 @@ AmlEvalCreateBufferField(
 	AML_DATA            BitCountData;
 	UINT64              BitCount;
 	BOOLEAN             IsBitIndexed;
+	UINT64              BitIndex;
 	AML_NAMESPACE_NODE* Node;
 
 	//
@@ -91,6 +92,27 @@ AmlEvalCreateBufferField(
 	}
 
 	//
+	// Update evaluated region bit index.
+	// CreateFieldOp and CreateBitFieldOp are bit-indexed, others are byte-indexed.
+	//
+	BitIndex = IndexData.u.Integer;
+	if( IsBitIndexed == AML_FALSE ){
+		if( IndexData.u.Integer >= ( UINT64_MAX / 8 ) ) {
+			AML_DEBUG_ERROR( State, "Error: Buffer field bit index leads to overflow.\n" );
+			return AML_FALSE;
+		}
+		BitIndex *= 8;
+	}
+
+	//
+	// Ensure that the end of the buffer field doesn't lead to overflow.
+	//
+	if( BitCount > ( UINT64_MAX - BitIndex ) ) {
+		AML_DEBUG_ERROR( State, "Error: Buffer field end bit index leads to overflow.\n" );
+		return AML_FALSE;
+	}
+
+	//
 	// Attempt to create a new reference counted object.
 	// Don't worry about releasing our reference/memory upon failure here,
 	// as failure is fatal to the entire state, and all memory is backed by
@@ -105,19 +127,10 @@ AmlEvalCreateBufferField(
 	//
 	Object->u.BufferField = ( AML_OBJECT_BUFFER_FIELD ){
 		.Name      = Name,
+		.BitIndex  = BitIndex,
 		.BitCount  = BitCount,
 		.SourceBuf = SourceBuf,
 	};
-
-	//
-	// Update evaluated region bit index.
-	// CreateFieldOp and CreateBitFieldOp are bit-indexed, others are byte-indexed.
-	//
-	if( IsBitIndexed ) {
-		Object->u.BufferField.BitIndex = IndexData.u.Integer;
-	} else {
-		Object->u.BufferField.BitIndex = ( IndexData.u.Integer * 8 );
-	}
 
 	//
 	// Create a namespace node for the field.
