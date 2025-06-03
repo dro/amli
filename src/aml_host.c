@@ -3,7 +3,7 @@
 #include "aml_namespace.h"
 
 //
-// Example stub implementation of an AML host interface.c.
+// Example stub implementation of an AML host interface.
 //
 #if 0
 
@@ -99,7 +99,7 @@ AmlHostOnDeviceInitialized(
 VOID
 AmlHostDebugPrintV(
 	_In_   struct _AML_HOST_CONTEXT* Host,
-	_In_   AML_DEBUG_LEVEL           LogLevel,
+	_In_   INT                       LogLevel,
 	_In_z_ const CHAR*               Format,
 	_In_   va_list                   VaList
 	)
@@ -166,7 +166,7 @@ AmlHostMutexCreate(
 	_Out_   UINT64*           MutexHandleOutput
 	)
 {
-	*MutexHandleOutput = MAXUINT64;
+	*MutexHandleOutput = UINT64_MAX;
 	return AML_TRUE;
 }
 
@@ -219,7 +219,7 @@ AmlHostEventCreate(
 	_Out_   UINT64*           EventHandleOutput
 	)
 {
-	*EventHandleOutput = MAXUINT64;
+	*EventHandleOutput = UINT64_MAX;
 	return AML_TRUE;
 }
 
