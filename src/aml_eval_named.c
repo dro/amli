@@ -288,7 +288,11 @@ AmlEvalFieldElement(
 		} else if( AmlDecoderConsumePackageLength( State, &Element->Length ) == AML_FALSE ) {
 			return AML_FALSE;
 		}
-		Element->Type = AML_FIELD_ELEMENT_TYPE_NAMED; /* Override junk FieldElementType with our own enum value. */
+
+		//
+		// Override junk FieldElementType with our own internal value.
+		//
+		Element->Type = AML_FIELD_ELEMENT_TYPE_NAMED;
 		break;
 	}
 
@@ -311,7 +315,7 @@ AmlEvalFieldOpcode(
 	AML_NAME_STRING     RegionName;
 	AML_NAMESPACE_NODE* OpRegionNsNode;
 	UINT8               FieldFlags;
-	SIZE_T              FieldOffset;
+	UINT64              FieldOffset;
 	AML_FIELD_ELEMENT   Element;
 	AML_OBJECT*         Object;
 	AML_NAMESPACE_NODE* Node;
@@ -383,6 +387,14 @@ AmlEvalFieldOpcode(
 		//
 		if( Element.Type == AML_FIELD_ELEMENT_TYPE_NAMED ) {
 			//
+			// Ensure that the end bit index of the element doesn't lead to overflow.
+			//
+			if( Element.Length > ( UINT64_MAX - FieldOffset ) ) {
+				AML_DEBUG_ERROR( State, "Error: Field element length would lead to overflow!\n" );
+				return AML_FALSE;
+			}
+
+			//
 			// Allocate new field object.
 			//
 			if( AmlObjectCreate( &State->Heap, AML_OBJECT_TYPE_FIELD, &Object ) == AML_FALSE ) {
@@ -426,6 +438,10 @@ AmlEvalFieldOpcode(
 		//
 		// Move the current field offset forward by the length of the decoded field.
 		//
+		if( Element.Length >= ( UINT64_MAX - FieldOffset ) ) {
+			AML_DEBUG_ERROR( State, "Error: Field element offset would lead to overflow.\n" );
+			return AML_FALSE;
+		}
 		FieldOffset += Element.Length;
 	}
 
@@ -547,6 +563,14 @@ AmlEvalBankFieldOpcode(
 		//
 		if( Element.Type == AML_FIELD_ELEMENT_TYPE_NAMED ) {
 			//
+			// Ensure that the end bit index of the element doesn't lead to overflow.
+			//
+			if( Element.Length > ( UINT64_MAX - FieldOffset ) ) {
+				AML_DEBUG_ERROR( State, "Error: Field element length would lead to overflow!\n" );
+				return AML_FALSE;
+			}
+
+			//
 			// Allocate new bank field object.
 			//
 			if( AmlObjectCreate( &State->Heap, AML_OBJECT_TYPE_BANK_FIELD, &Object ) == AML_FALSE ) {
@@ -595,6 +619,10 @@ AmlEvalBankFieldOpcode(
 		//
 		// Move the current field offset forward by the length of the decoded field.
 		//
+		if( Element.Length >= ( SIZE_MAX - FieldOffset ) ) {
+			AML_DEBUG_ERROR( State, "Error: Field element offset would lead to overflow.\n" );
+			return AML_FALSE;
+		}
 		FieldOffset += Element.Length;
 	}
 
@@ -706,6 +734,14 @@ AmlEvalIndexFieldOpcode(
 		//
 		if( Element.Type == AML_FIELD_ELEMENT_TYPE_NAMED ) {
 			//
+			// Ensure that the end bit index of the element doesn't lead to overflow.
+			//
+			if( Element.Length > ( UINT64_MAX - FieldOffset ) ) {
+				AML_DEBUG_ERROR( State, "Error: Field element length would lead to overflow!\n" );
+				return AML_FALSE;
+			}
+
+			//
 			// Allocate new index field object.
 			//
 			if( AmlObjectCreate( &State->Heap, AML_OBJECT_TYPE_INDEX_FIELD, &Object ) == AML_FALSE ) {
@@ -751,6 +787,10 @@ AmlEvalIndexFieldOpcode(
 		//
 		// Move the current field offset forward by the length of the decoded field.
 		//
+		if( Element.Length >= ( SIZE_MAX - FieldOffset ) ) {
+			AML_DEBUG_ERROR( State, "Error: Field element offset would lead to overflow.\n" );
+			return AML_FALSE;
+		}
 		FieldOffset += Element.Length;
 	}
 
