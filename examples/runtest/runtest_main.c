@@ -74,7 +74,7 @@ AmlTestPrintNamespaceTreeNode(
 	// Process all children.
 	//
 	for( TreeChild = TreeNode->ChildFirst; TreeChild != NULL; TreeChild = TreeChild->Next ) {
-		AmlTestrintNamespaceTreeNode( State, TreeChild, ( LevelIndex + 1 ) );
+		AmlTestPrintNamespaceTreeNode( State, TreeChild, ( LevelIndex + 1 ) );
 	}
 }
 
