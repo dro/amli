@@ -1138,12 +1138,13 @@ AmlEvalMethodInvocation(
 }
 
 //
-// Evaluate a TermArg.
+// Evaluate a TermArg, internal function doesn't handle raising the recursion depth.
 // TermArg := ExpressionOpcode | DataObject | ArgObj | LocalObj
 //
 _Success_( return )
+static
 BOOLEAN
-AmlEvalTermArg(
+AmlEvalTermArgInternal(
 	_Inout_ AML_STATE* State,
 	_In_    UINT       TermArgFlags,
 	_Out_   AML_DATA*  ValueData
@@ -1330,6 +1331,39 @@ AmlEvalTermArg(
 }
 
 //
+// Evaluate a TermArg.
+// TermArg := ExpressionOpcode | DataObject | ArgObj | LocalObj
+//
+_Success_( return )
+BOOLEAN
+AmlEvalTermArg(
+	_Inout_ AML_STATE* State,
+	_In_    UINT       TermArgFlags,
+	_Out_   AML_DATA*  ValueData
+	)
+{
+	SIZE_T  OldDepth;
+	BOOLEAN Success;
+
+	//
+	// Cannot continue evaluating another TermArg if we have reached the recursion limit.
+	//
+	if( State->RecursionDepth >= AML_BUILD_MAX_RECURSION_DEPTH ) {
+		AML_DEBUG_ERROR( State, "Error: Reached recursion depth limit!\n" );
+		return AML_FALSE;
+	}
+
+	//
+	// Update recursion depth and execute actual TermArg evaluation.
+	//
+	OldDepth = State->RecursionDepth;
+	State->RecursionDepth += 1;
+	Success = AmlEvalTermArgInternal( State, TermArgFlags, ValueData );
+	State->RecursionDepth = OldDepth;
+	return Success;
+}
+
+//
 // Attempt to evaluate a TermArg and then apply implicit conversion to the given type.
 // Passing a ConversionType of AML_DATA_TYPE_NONE performs no conversion.
 //
@@ -1507,6 +1541,7 @@ AmlEvalTermListCode(
 {
 	SIZE_T OldCursor;
 	SIZE_T OldSize;
+	SIZE_T OldDepth;
 
 	//
 	// The given code block must be within the bounds of the input data.
@@ -1516,10 +1551,19 @@ AmlEvalTermListCode(
 	}
 
 	//
+	// Ensure that we havent reached the user's max recursion limit.
+	//
+	if( State->RecursionDepth >= AML_BUILD_MAX_RECURSION_DEPTH ) {
+		AML_DEBUG_ERROR( State, "Error: Reached recursion depth limit!\n" );
+		return AML_FALSE;
+	}
+
+	//
 	// Save old decoder cursor/window size before jumping to the given start offset, will be restored after executing the chunk of input code.
 	//
 	OldCursor = State->DataCursor;
 	OldSize = State->DataLength;
+	OldDepth = State->RecursionDepth;
 
 	//
 	// Move interpreter data window to input code block.
@@ -1528,6 +1572,7 @@ AmlEvalTermListCode(
 	//
 	State->DataCursor = CodeStart;
 	State->DataLength = ( CodeStart + CodeSize );
+	State->RecursionDepth += 1;
 
 	//
 	// Recursively execute terms until we reach the end of the input code block.
@@ -1562,6 +1607,7 @@ AmlEvalTermListCode(
 		State->DataCursor = OldCursor;
 	}
 	State->DataLength = OldSize; 
+	State->RecursionDepth = OldDepth;
 	return AML_TRUE;
 }
 

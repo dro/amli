@@ -50,7 +50,6 @@ AmlDecoderConsumeByte(
 	if( State->DataCursor >= State->DataLength ) {
 		return AML_FALSE;
 	}
-
 	Cursor = State->DataCursor++;
 	if( pConsumedByte != NULL ) {
 		*pConsumedByte = State->Data[ Cursor ];
@@ -75,14 +74,13 @@ AmlDecoderConsumeByteSpan(
 	if( State->DataCursor >= State->DataLength || ByteCount > ( State->DataLength - State->DataCursor ) ) {
 		return AML_FALSE;
 	}
-
 	if( ConsumedByteSpan != NULL ) {
 		for( i = 0; i < ByteCount; i++ ) {
 			ConsumedByteSpan[ i ] = State->Data[ State->DataCursor + i ];
 		}
 	}
-
 	State->DataCursor += ByteCount;
+
 	return AML_TRUE;
 }
 
@@ -1429,10 +1427,12 @@ AmlDecoderConsumeSuperName(
 
 //
 // Generically attempt to consume all fixed arguments of the given instruction.
+// The internal function does not handle updating the active recursion depth.
 //
 _Success_( return )
+static
 BOOLEAN
-AmlDecoderConsumeInstructionArgs(
+AmlDecoderConsumeInstructionArgsInternal(
 	_Inout_ AML_STATE*                            State,
 	_In_    const AML_DECODER_INSTRUCTION_OPCODE* Instruction
 	)
@@ -1495,7 +1495,8 @@ AmlDecoderConsumeInstructionArgs(
 			if( ( i == ( Instruction->FixedArgumentTypeCount - 1 ) )
 				|| ( Instruction->FixedArgumentTypes[ i + 1 ] != AML_ARGUMENT_FIXED_TYPE_NULL_CHAR ) )
 			{
-				return AML_FALSE;
+				Success = AML_FALSE;
+				break;
 			}
 			Success = AmlDecoderConsumeAsciiCharListNullTerminated( State, NULL );
 			i++; /* Account for consumed NullChar argument, ignore the fixed arg entry for it. */
@@ -1528,7 +1529,8 @@ AmlDecoderConsumeInstructionArgs(
 			break;
 		case AML_ARGUMENT_FIXED_TYPE_TARGET:
 			if( AmlDecoderPeekByte( State, 0, &PeekByte ) == AML_FALSE ) {
-				return AML_FALSE;
+				Success = AML_FALSE;
+				break;
 			} else if( PeekByte == 0 ) {
 				Success = AmlDecoderConsumeByte( State, NULL );
 				break;
@@ -1552,6 +1554,37 @@ AmlDecoderConsumeInstructionArgs(
 	}
 
 	return AML_TRUE;
+}
+
+//
+// Generically attempt to consume all fixed arguments of the given instruction.
+//
+_Success_( return )
+BOOLEAN
+AmlDecoderConsumeInstructionArgs(
+	_Inout_ AML_STATE*                            State,
+	_In_    const AML_DECODER_INSTRUCTION_OPCODE* Instruction
+	)
+{
+	SIZE_T  OldDepth;
+	BOOLEAN Success;
+
+	//
+	// Cannot continue decoding another instruction argument if we have reached the recursion limit.
+	//
+	if( State->RecursionDepth >= AML_BUILD_MAX_RECURSION_DEPTH ) {
+		AML_DEBUG_ERROR( State, "Error: Reached recursion depth limit!\n" );
+		return AML_FALSE;
+	}
+
+	//
+	// Update the recursion depth and perform the actual decoding of the arguments.
+	//
+	OldDepth = State->RecursionDepth;
+	State->RecursionDepth += 1;
+	Success = AmlDecoderConsumeInstructionArgsInternal( State, Instruction );
+	State->RecursionDepth = OldDepth;
+	return Success;
 }
 
 //
@@ -1654,15 +1687,16 @@ AmlDecoderConsumeExpressionOpcode(
 }
 
 //
-// May lead to recursion!
 // Attempts to consume an entire term arg, decoding until we figure out how long the span of term arg data is,
 // then the offset to the raw bytes of the decoded span are returned to the caller (if desired).
 // Does not actually evaluate the TermArg, only attempts to decode enough to figure out the size of the span.
-// TermArg := ExpressionOpcode | DataObject | ArgObj | LocalObj
+// TermArg := ExpressionOpcode | DataObject | ArgObj | 
+// The internal function does not handle updating the active recursion depth.
 //
 _Success_( return )
+static
 BOOLEAN
-AmlDecoderConsumeTermArg(
+AmlDecoderConsumeTermArgInternal(
 	_Inout_   AML_STATE*                State,
 	_Out_opt_ AML_OPAQUE_TERM_ARG_DATA* OpaqueSpanOutput
 	)
@@ -1711,6 +1745,41 @@ AmlDecoderConsumeTermArg(
 	}
 
 	return AML_TRUE;
+}
+
+//
+// May lead to recursion!
+// Attempts to consume an entire term arg, decoding until we figure out how long the span of term arg data is,
+// then the offset to the raw bytes of the decoded span are returned to the caller (if desired).
+// Does not actually evaluate the TermArg, only attempts to decode enough to figure out the size of the span.
+// TermArg := ExpressionOpcode | DataObject | ArgObj | LocalObj
+//
+_Success_( return )
+BOOLEAN
+AmlDecoderConsumeTermArg(
+	_Inout_   AML_STATE*                State,
+	_Out_opt_ AML_OPAQUE_TERM_ARG_DATA* OpaqueSpanOutput
+	)
+{
+	SIZE_T  OldDepth;
+	BOOLEAN Success;
+
+	//
+	// Cannot continue decoding another instruction argument if we have reached the recursion limit.
+	//
+	if( State->RecursionDepth >= AML_BUILD_MAX_RECURSION_DEPTH ) {
+		AML_DEBUG_ERROR( State, "Error: Reached recursion depth limit!\n" );
+		return AML_FALSE;
+	}
+
+	//
+	// Update the recursion depth and perform the actual decoding of the TermArg.
+	//
+	OldDepth = State->RecursionDepth;
+	State->RecursionDepth += 1;
+	Success = AmlDecoderConsumeTermArgInternal( State, OpaqueSpanOutput );
+	State->RecursionDepth = OldDepth;
+	return Success;
 }
 
 //

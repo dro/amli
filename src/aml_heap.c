@@ -120,7 +120,6 @@ AmlHeapFree(
 	)
 {
 	AML_HEAP_BIN_ENTRY* BinEntry;
-	SIZE_T              LzCount;
 	SIZE_T              BinIndex;
 
 #ifdef AML_BUILD_FUZZER
