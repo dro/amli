@@ -222,8 +222,8 @@ AmlEvalFieldElement(
 				|| ( ConnectionNode->Object->u.Name.Value.Type != AML_DATA_TYPE_BUFFER ) 
 				|| ( AmlDataDuplicate( &ConnectionNode->Object->u.Name.Value, &State->Heap, &ConnectionBuffer ) == AML_FALSE ) )
 			{
-				AML_DEBUG_ERROR( State, "Error: Invalid field connection resource object path: \"" );
-				AmlDebugPrintNameString( State, AML_DEBUG_LEVEL_ERROR, &ConnectionNode->AbsolutePath );
+				AML_DEBUG_ERROR( State, "Error: Invalid field connection, name: \"" );
+				AmlDebugPrintNameString( State, AML_DEBUG_LEVEL_ERROR, &ConnectionName );
 				AML_DEBUG_ERROR( State, "\"\n" );
 				return AML_FALSE;
 			}
