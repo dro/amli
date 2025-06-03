@@ -120,16 +120,14 @@ AmlTestExecuteSingleTable(
 		if( ( TableHeader.Signature != 0x54445344 ) && ( TableHeader.Signature != 0x54445353 ) ) {
 			printf( "Error: Invalid input table signature (must be DSDT or SSDT).\n" );
 			return AML_FALSE;
-		} else if( ( TableHeader.Length <= sizeof( TableHeader ) ) || ( TableHeader.Length > InputSize ) ) {
-			printf( "Error: Invalid input table size.\n" );
-			return AML_FALSE;
 		}
-		TableDataSize = ( TableHeader.Length - sizeof( TableHeader ) );
-		Use64BitInteger = ( TableHeader.Revision > 1 );
-	} else {
-		TableDataSize = ( InputSize - sizeof( TableHeader ) );
-		Use64BitInteger = AML_TRUE;
 	}
+	if( ( TableHeader.Length <= sizeof( TableHeader ) ) || ( TableHeader.Length > InputSize ) ) {
+		printf( "Error: Invalid input table size.\n" );
+		return AML_FALSE;
+	}
+	TableDataSize = ( TableHeader.Length - sizeof( TableHeader ) );
+	Use64BitInteger = ( TableHeader.Revision > 1 );
 	TableData = &Input[ sizeof( TableHeader ) ];
 
 	//
