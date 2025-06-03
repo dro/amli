@@ -40,7 +40,7 @@ AmlTestMemoryFree(
 // Recursively debug print a namespace tree node and all of its children.
 //
 VOID
-AmlTestrintNamespaceTreeNode(
+AmlTestPrintNamespaceTreeNode(
 	_In_     const AML_STATE*         State,
 	_In_opt_ AML_NAMESPACE_TREE_NODE* TreeNode,
 	_In_     UINT64                   LevelIndex
@@ -182,7 +182,7 @@ AmlTestExecuteSingleTable(
 	// Dump the entire created namespace in hierarchical tree format.
 	//
 #ifndef AML_BUILD_FUZZER
-	AmlTestrintNamespaceTreeNode( &State, &State.Namespace.TreeRoot, 0 );
+	AmlTestPrintNamespaceTreeNode( &State, &State.Namespace.TreeRoot, 0 );
 #endif
 
 	//
