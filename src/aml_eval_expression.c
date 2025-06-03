@@ -436,11 +436,11 @@ AmlEvalConcat(
 		// Concatenate the two integer values to the buffer data.
 		//
 		if( State->IsIntegerSize64 ) {
-			AML_MEMCPY( &Buffer[ 0 ], &Source1.u.Integer, sizeof( UINT64 ) );
-			AML_MEMCPY( &Buffer[ 8 ], &ConvSource2.u.Integer, sizeof( UINT64 ) );
+			AML_MEMCPY( &Buffer->Data[ 0 ], &Source1.u.Integer, sizeof( UINT64 ) );
+			AML_MEMCPY( &Buffer->Data[ 8 ], &ConvSource2.u.Integer, sizeof( UINT64 ) );
 		} else {
-			AML_MEMCPY( &Buffer[ 0 ], &( UINT32 ){ ( UINT32 )Source1.u.Integer }, sizeof( UINT32 ) );
-			AML_MEMCPY( &Buffer[ 4 ], &( UINT32 ){ ( UINT32 )ConvSource2.u.Integer }, sizeof( UINT32 ) );
+			AML_MEMCPY( &Buffer->Data[ 0 ], &( UINT32 ){ ( UINT32 )Source1.u.Integer }, sizeof( UINT32 ) );
+			AML_MEMCPY( &Buffer->Data[ 4 ], &( UINT32 ){ ( UINT32 )ConvSource2.u.Integer }, sizeof( UINT32 ) );
 		}
 
 		//
