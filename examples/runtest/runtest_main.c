@@ -113,6 +113,7 @@ AmlTestExecuteSingleTable(
 	// Validate the ACPI table header.
 	// The IgnoreHeader mode is used for fuzzing, ignores the table header,
 	// just uses anything after the header as input.
+	// TODO: Remove the IgnoreHeader feature even when fuzzing.
 	//
 	AML_MEMCPY( &TableHeader, Input, sizeof( TableHeader ) );
 	if( IgnoreHeader == AML_FALSE ) {
@@ -124,11 +125,12 @@ AmlTestExecuteSingleTable(
 			return AML_FALSE;
 		}
 		TableDataSize = ( TableHeader.Length - sizeof( TableHeader ) );
+		Use64BitInteger = ( TableHeader.Revision > 1 );
 	} else {
 		TableDataSize = ( InputSize - sizeof( TableHeader ) );
+		Use64BitInteger = AML_TRUE;
 	}
 	TableData = &Input[ sizeof( TableHeader ) ];
-	Use64BitInteger = ( TableHeader.Revision > 1 ); /* TODO: Maybe force to true when fuzzing. */
 
 	//
 	// Set up decoder and host interface.
