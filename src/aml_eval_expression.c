@@ -2040,7 +2040,12 @@ AmlEvalExpressionOpcode(
 		//
 		if( AmlDataDuplicate( &Operand1, &State->Heap, &Result ) == AML_FALSE ) {
 			return AML_FALSE;
-		} else if( AmlConvObjectInPlace( State, &State->Heap, &Result, AML_DATA_TYPE_STRING, AML_CONV_FLAGS_EXPLICIT_TO_DECIMAL_STRING ) == AML_FALSE ) {
+		} else if( AmlConvObjectInPlace( State,
+										 &State->Heap,
+										 &Result,
+										 AML_DATA_TYPE_STRING,
+										 AML_CONV_FLAGS_EXPLICIT_TO_DECIMAL_STRING ) == AML_FALSE )
+		{
 			AmlDataFree( &Result );
 			return AML_FALSE;
 		}
@@ -2173,7 +2178,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_EQUAL, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types" );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
 			return AML_FALSE;
 		}
 		break;
@@ -2190,7 +2195,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_EQUAL, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = ~Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types" );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
 			return AML_FALSE;
 		}
 		break;
@@ -2207,7 +2212,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_GREATER, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types" );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
 			return AML_FALSE;
 		}
 		break;
@@ -2224,7 +2229,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_LESS, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types" );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
 			return AML_FALSE;
 		}
 		break;
@@ -2241,7 +2246,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_GREATER_EQUAL, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types" );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
 			return AML_FALSE;
 		}
 		break;
@@ -2258,7 +2263,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_LESS_EQUAL, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types" );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
 			return AML_FALSE;
 		}
 		break;
@@ -2282,7 +2287,7 @@ AmlEvalExpressionOpcode(
 		// Divide-by-zero exceptions are fatal.
 		//
 		if( Operand2.u.Integer == 0 ) {
-			AML_DEBUG_ERROR( State, "Error: division by zero\n" );
+			AML_DEBUG_ERROR( State, "Error: Division by zero.\n" );
 			return AML_FALSE;
 		}
 
@@ -2349,7 +2354,7 @@ AmlEvalExpressionOpcode(
 		if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
 			return AML_FALSE;
 		} else if( Operand2.u.Integer == 0 ) {
-			AML_DEBUG_ERROR( State, "Error: mod divisor is zero.\n" );
+			AML_DEBUG_ERROR( State, "Error: Mod divisor is zero.\n" );
 			return AML_FALSE;
 		}
 		Result = ( AML_DATA ){
@@ -2404,7 +2409,7 @@ AmlEvalExpressionOpcode(
 		}
 		Result = ( AML_DATA ){
 			.Type      = AML_DATA_TYPE_INTEGER,
-			.u.Integer = ( Operand1.u.Integer << Operand2.u.Integer )
+			.u.Integer = ( Operand1.u.Integer << AML_MIN( Operand2.u.Integer, 63 ) )
 		};
 		AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, "<<", Target, Operand1, Operand2, Result );
 		break;
@@ -2414,7 +2419,7 @@ AmlEvalExpressionOpcode(
 		}
 		Result = ( AML_DATA ){
 			.Type      = AML_DATA_TYPE_INTEGER,
-			.u.Integer = ( Operand1.u.Integer >> Operand2.u.Integer )
+			.u.Integer = ( Operand1.u.Integer >> AML_MIN( Operand2.u.Integer, 63 ) )
 		};
 		AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, ">>", Target, Operand1, Operand2, Result );
 		break;
