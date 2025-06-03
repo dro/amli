@@ -7,7 +7,7 @@
 // Default string used for _OS operating system name value.
 //
 #ifndef AML_OS_NAME
-#define AML_OS_NAME "Microsoft Windows NT"
+ #define AML_OS_NAME "Microsoft Windows NT"
 #endif
 
 //

@@ -12,6 +12,17 @@
 #include "aml_state_pass.h"
 
 //
+// Maximum recursion depth limit.
+//
+#ifndef AML_BUILD_MAX_RECURSION_DEPTH
+ #ifdef AML_BUILD_FUZZER
+  #define AML_BUILD_MAX_RECURSION_DEPTH 128
+ #else
+  #define AML_BUILD_MAX_RECURSION_DEPTH 2048
+ #endif
+#endif
+
+//
 // There is currently a problem with this feature, forced to be disabled for now.
 //
 #define AML_BUILD_NO_SNAPSHOT_ITEMS
@@ -83,6 +94,11 @@ typedef struct _AML_STATE {
 		// While loop state.
 		//
 		SIZE_T WhileLoopLevel;
+
+		//
+		// Active recursion depth.
+		//
+		SIZE_T RecursionDepth;
 
 		//
 		// Control flow interruption event state (continue, break, return, etc).
