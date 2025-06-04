@@ -28,12 +28,12 @@ AmlStateCreate(
 
 	//
 	// Default initialize fields.
+	// Memset is used here to avoid a large copy of the default AML_STATE structure on the stack.
 	//
-	*State = ( AML_STATE ){
-		.PassType        = AML_PASS_TYPE_FULL,
-		.IsIntegerSize64 = Parameters->Use64BitInteger,
-		.Host            = Parameters->Host
-	};
+	AML_MEMSET( State, 0, sizeof( *State ) );
+	State->PassType        = AML_PASS_TYPE_FULL;
+	State->IsIntegerSize64 = Parameters->Use64BitInteger;
+	State->Host            = Parameters->Host;
 
 	//
 	// Set up the default operation region space access handlers.
@@ -114,7 +114,7 @@ AmlStateFree(
 	//
 	// Zero fields for debugging.
 	//
-	*State = ( AML_STATE ){ 0 };
+	AML_MEMSET( State, 0, sizeof( *State ) );
 }
 
 //
