@@ -156,7 +156,7 @@ AmlTestExecuteSingleTable(
 	// Create all predefined ACPI root namespaces and objects.
 	//
 	if( AmlCreatePredefinedNamespaces( &State ) == AML_FALSE ) {
-		printf( "Error: AmlDecoderCreatePredefinedNamespaces failed!\n" );
+		printf( "Error: AmlCreatePredefinedNamespaces failed!\n" );
 		goto FAIL_FREE_STATE;
 	}
 	AmlCreatePredefinedObjects( &State );
