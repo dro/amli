@@ -682,8 +682,10 @@ AmlCompleteInitialLoad(
 	//
 	// Query the status of all devices present in the namespace and attempt to call their initializers if present.
 	//
-	if( AmlInitializeDevices( State, &State->Namespace.TreeRoot, AML_TRUE ) == AML_FALSE ) {
-		return AML_FALSE;
+	if( InitializeDevices ) {
+		if( AmlInitializeDevices( State, &State->Namespace.TreeRoot, AML_TRUE ) == AML_FALSE ) {
+			return AML_FALSE;
+		}
 	}
 
 	return AML_TRUE;
