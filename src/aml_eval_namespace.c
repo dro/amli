@@ -12,9 +12,9 @@ AmlEvalName(
 	_In_    BOOLEAN    ConsumeOpcode
 	)
 {
-	AML_NAMESPACE_NODE*            Node;
-	AML_OBJECT*                    Object;
-	SIZE_T                         i;
+	AML_NAMESPACE_NODE* Node;
+	AML_OBJECT*         Object;
+	SIZE_T              i;
 
 	//
 	// Consume the opcode if the caller hasn't done it for us.
