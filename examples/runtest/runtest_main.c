@@ -39,6 +39,7 @@ AmlTestMemoryFree(
 //
 // Recursively debug print a namespace tree node and all of its children.
 //
+static
 VOID
 AmlTestPrintNamespaceTreeNode(
 	_In_     const AML_STATE*         State,
