@@ -18,8 +18,11 @@ AmlNamespaceStateInitialize(
 {
 	//
 	// Default initialize fields.
+	// Memset is used here to avoid a large empty copy of AML_NAMESPACE_STATE on the stack.
 	//
-	*State = ( AML_NAMESPACE_STATE ){ .Heap = Heap, .TreeMaxDepth = 256 };
+	AML_MEMSET( State, 0, sizeof( *State ) );
+	State->Heap = Heap;
+	State->TreeMaxDepth = 256;
 
 	//
 	// Initialize arenas.
@@ -60,7 +63,7 @@ AmlNamespaceStateRelease(
 	//
 	// Zero fields for debugging.
 	//
-	*State = ( AML_NAMESPACE_STATE ){ 0 };
+	AML_MEMSET( State, 0, sizeof( *State ) );
 }
 
 //

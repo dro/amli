@@ -76,7 +76,11 @@ All platform-specific intrinsics/helpers defined in `aml_platform.h` can be over
 Other than these, some special preprocessor defines exist to control the build and certain features at compile-time.
 
 ### `AML_BUILD_HOST_PLATFORM_HEADER`
-Causes `aml_platform.h` to include a user-supplied `aml_host_platform.h`, allowing the user to override any desired platform definitions.
+Causes `aml_platform.h` to include a user-supplied header, allowing the user to override any desired platform definitions.
+
+### `AML_BUILD_HOST_PLATFORM_HEADER_NAME`
+Allows the user to override the header included by `aml_platform.h` when using the `AML_BUILD_HOST_PLATFORM_HEADER` setting.
+Defaults to  `aml_host_platform.h` if unspecified.
 
 ### `AML_BUILD_DEBUG_LEVEL`
 Change the minimum debug logging verbosity level at compile-time. Possible values:
