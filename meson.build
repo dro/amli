@@ -37,7 +37,8 @@ src = files(
     'src/aml_state.c',
     'src/aml_state_snapshot.c',
     'src/aml_string_conv.c',
-    'src/aml_platform.c'
+    'src/aml_platform.c',
+    'src/aml_resource.c'
 )
 inc = include_directories('src')
 
