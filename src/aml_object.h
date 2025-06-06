@@ -140,8 +140,7 @@ typedef struct _AML_OBJECT_OPERATION_REGION {
 	VOID*                     MappedBase;     /* For memory-mapped space types. */
 	AML_PCI_INFORMATION       PciInfo;        /* For PCI space types (CFG/BAR). */
 	UINT8                     SpaceType;      /* AML_REGION_SPACE_TYPE */
-	BOOLEAN                   IsMapped : 1;	  /* For memory-mapped space types. */
-	BOOLEAN                   IsPciValid : 1; /* For PCI space types (CFG/BAR). */
+	BOOLEAN                   IsMapped : 1;	  /* For memory-mapped and PCI (CFG/BAR) space types. */
 } AML_OBJECT_OPERATION_REGION;
 
 //

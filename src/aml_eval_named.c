@@ -1654,7 +1654,6 @@ AmlEvalOpRegion(
 	AML_DATA                     RegionLength;
 	AML_OBJECT_OPERATION_REGION* OpRegion;
 	AML_NAMESPACE_NODE*          Node;
-	AML_NAMESPACE_NODE*          ParentNode;
 
 	//
 	// RegionSpace := ByteData
@@ -1706,26 +1705,6 @@ AmlEvalOpRegion(
 	//
 	Object->NamespaceNode = Node;
 	Node->Object = Object;
-
-	//
-	// Certain operation region address space types require additional initialization.
-	//
-	switch( SpaceType ) {
-	case AML_REGION_SPACE_TYPE_PCI_CONFIG:
-	case AML_REGION_SPACE_TYPE_PCI_BAR_TARGET:
-		//
-		// PCI access requires us to attempt to resolve the PCI information of the parent device.
-		//
-		ParentNode = AmlNamespaceParentNode( &State->Namespace, Node );
-		OpRegion->IsPciValid = AmlEvalNodePciInformation( State, ParentNode, &Object->u.OpRegion.PciInfo );
-		if( OpRegion->IsPciValid == AML_FALSE ) {
-			AML_DEBUG_ERROR( State, "Error: Failed to evaluate PCI information for operation region \"" );
-			AmlDebugPrintNameString( State, AML_DEBUG_LEVEL_ERROR, &Node->AbsolutePath );
-			AML_DEBUG_ERROR( State, "\"\n" );
-		}
-		break;
-	}
-
 	return AML_TRUE;
 }
 

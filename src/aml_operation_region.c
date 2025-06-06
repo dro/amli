@@ -1,4 +1,5 @@
 #include "aml_state.h"
+#include "aml_eval.h"
 #include "aml_debug.h"
 #include "aml_pci.h"
 #include "aml_operation_region.h"
@@ -74,10 +75,13 @@ _Success_( return )
 static
 BOOLEAN
 AmlOperationRegionEnsureMapped(
-	_In_    const struct _AML_STATE*     State,
+	_Inout_ struct _AML_STATE*           State,
 	_Inout_ AML_OBJECT_OPERATION_REGION* Region
 	)
 {
+	AML_OBJECT*         Object;
+	AML_NAMESPACE_NODE* ParentNode;
+
 	//
 	// The backing region is only mapped once, on-demand/lazily upon the first access, and unmapped upon destruction of the object.
 	//
@@ -91,7 +95,44 @@ AmlOperationRegionEnsureMapped(
 	switch( Region->SpaceType ) {
 	case AML_REGION_SPACE_TYPE_SYSTEM_MEMORY:
 		Region->IsMapped = AmlHostMemoryMap( State->Host, Region->Offset, Region->Length, 0, &Region->MappedBase );
+		if( Region->IsMapped == AML_FALSE ) {
+			AML_DEBUG_ERROR(
+				State,
+				"Error: Failed to map system memory operation region: 0x"PRIx64" (Size: 0x"PRIx64")\n",
+				Region->Offset,
+				Region->Length
+			);
+		}
 		return Region->IsMapped;
+	case AML_REGION_SPACE_TYPE_PCI_CONFIG:
+	case AML_REGION_SPACE_TYPE_PCI_BAR_TARGET:
+		//
+		// Get the parent object that the region belongs to.
+		// Hack, the actual object is currently never passed down this codepath!
+		// TODO: Fix these functions to take in a regular object!
+		//
+		Object = AML_CONTAINING_RECORD( Region, AML_OBJECT, u.OpRegion );
+		if( ( Object->NamespaceNode == NULL ) || ( Object->Type != AML_OBJECT_TYPE_OPERATION_REGION ) ) {
+			return AML_FALSE;
+		}
+
+		//
+		// PCI access requires us to attempt to resolve the PCI information of the parent device.
+		//
+		ParentNode = AmlNamespaceParentNode( &State->Namespace, Object->NamespaceNode );
+		Region->IsMapped = AmlEvalNodePciInformation( State, ParentNode, &Object->u.OpRegion.PciInfo );
+		if( Region->IsMapped == AML_FALSE ) {
+			AML_DEBUG_ERROR( State, "Error: Failed to evaluate PCI information for operation region \"" );
+			AmlDebugPrintNameString( State, AML_DEBUG_LEVEL_ERROR, &Object->NamespaceNode->AbsolutePath );
+			AML_DEBUG_ERROR( State, "\"\n" );
+		} else {
+			AML_DEBUG_INFO( State, "Evaluated PCI information for operation region \"" );
+			AmlDebugPrintNameString( State, AML_DEBUG_LEVEL_INFO, &Object->NamespaceNode->AbsolutePath );
+			AML_DEBUG_INFO( State, "\"\n" );
+		}
+		return Region->IsMapped;
+	default:
+		break;
 	}
 
 	return AML_TRUE;
@@ -528,7 +569,7 @@ AmlOperationRegionReadPciConfig(
 	//
 	// We must have evaluated PCI information for the region's device.
 	//
-	if( Region->IsPciValid == AML_FALSE ) {
+	if( Region->IsMapped == AML_FALSE ) {
 		AML_DEBUG_ERROR( State, "Error: No valid parsed PCI device information for operation region!\n" );
 		return AML_FALSE;
 	}
@@ -594,7 +635,7 @@ AmlOperationRegionWritePciConfig(
 	//
 	// We must have evaluated PCI information for the region's device.
 	//
-	if( Region->IsPciValid == AML_FALSE ) {
+	if( Region->IsMapped == AML_FALSE ) {
 		AML_DEBUG_ERROR( State, "Error: No valid parsed PCI device information for operation region!\n" );
 		return AML_FALSE;
 	}
