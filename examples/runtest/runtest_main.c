@@ -334,7 +334,6 @@ main(
 	_In_count_( ArgC ) CHAR** ArgV
 	)
 {
-
 #ifndef AML_BUILD_LOCAL_DEV_TEST
 	if( ArgC < 2 ) {
 		printf(
@@ -345,7 +344,7 @@ main(
 	}
 	return AmlTestMain( ArgV[ 1 ] );
 #else
-	return AmlTestMain( "C:\\iasl\\test2.aml" );
+	return AmlTestMain( "C:\\git\\amli\\tests\\board_test_2\\DSDT.aml" );
 #endif
 }
 

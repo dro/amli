@@ -2178,7 +2178,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_EQUAL, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types.\n" );
 			return AML_FALSE;
 		}
 		break;
@@ -2195,7 +2195,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_EQUAL, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = ~Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types.\n" );
 			return AML_FALSE;
 		}
 		break;
@@ -2212,7 +2212,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_GREATER, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types.\n" );
 			return AML_FALSE;
 		}
 		break;
@@ -2229,7 +2229,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_LESS, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types.\n" );
 			return AML_FALSE;
 		}
 		break;
@@ -2246,7 +2246,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_GREATER_EQUAL, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types.\n" );
 			return AML_FALSE;
 		}
 		break;
@@ -2263,7 +2263,7 @@ AmlEvalExpressionOpcode(
 		Comparison = AmlCompareData( State, &State->Heap, AML_COMPARISON_TYPE_LESS_EQUAL, &Operand1, &Operand2 );
 		Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER, .u.Integer = Comparison };
 		if( Comparison == AML_COMPARISON_RESULT_ERROR ) {
-			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types." );
+			AML_DEBUG_ERROR( State, "Error: Invalid logical comparison types.\n" );
 			return AML_FALSE;
 		}
 		break;
