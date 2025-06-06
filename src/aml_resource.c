@@ -410,21 +410,3 @@ AmlResourceViewRead(
 	View->DataCursor += Size;
 	return AML_TRUE;
 }
-
-//
-// 
-//
-VOID
-TestProcessResources(
-	VOID
-	)
-{
-	UINT8 Buf[] = { 0x03, 0x09, 0x0A, 0x0B, 0x0C };
-	AML_RESOURCE_VIEW ResourceView;
-
-	AmlResourceViewInitialize( &ResourceView, Buf, sizeof( Buf ) );
-
-	//
-	// Process all resources.
-	//
-}
