@@ -782,8 +782,6 @@ typedef struct _AML_RESOURCE_I2C {
 #define AML_RESOURCE_I2C_10BIT_ADDRESSING_MASK  1
 #define AML_RESOURCE_I2C_10BIT_ADDRESSING(Flags) \
     (((Flags) >> AML_RESOURCE_I2C_10BIT_ADDRESSING_SHIFT) & AML_RESOURCE_I2C_10BIT_ADDRESSING_MASK)
-    #define AML_RESOURCE_I2C_7BIT_ADDRESSING  0 /* 7-bit addressing */
-    #define AML_RESOURCE_I2C_10BIT_ADDRESSING 1 /* 10-bit addressing */
 
 //
 // I2C slave address bitfields.
