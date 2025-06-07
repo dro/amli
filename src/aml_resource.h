@@ -79,6 +79,14 @@ AmlResourceViewInitialize(
     );
 
 //
+// Returns true once the resource view has reached the end of the input buffer.
+//
+BOOLEAN
+AmlResourceViewEnd(
+    _In_ const AML_RESOURCE_VIEW* View
+    );
+
+//
 // Peek information about the next descriptor in the view (tag, length),
 // and validate that the descriptor length is fully contained by the view.
 //

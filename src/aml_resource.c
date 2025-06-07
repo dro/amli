@@ -14,6 +14,17 @@ AmlResourceViewInitialize(
 }
 
 //
+// Returns true once the resource view has reached the end of the input buffer.
+//
+BOOLEAN
+AmlResourceViewEnd(
+    _In_ const AML_RESOURCE_VIEW* View
+    )
+{
+    return ( View->DataCursor >= View->DataSize );
+}
+
+//
 // Peek information about the next descriptor in the view (tag, length),
 // and validate that the descriptor length is fully contained by the view.
 //
@@ -47,7 +58,7 @@ AmlResourceViewPeekHeader(
     // a 16-bit length in the 2 bytes following the tag.
     //
     HeaderSize = 1;
-    if( ( ( Tag & AML_RESOURCE_SMALL_TAG_TYPE_FLAG ) == 0 ) ) {
+    if( ( ( Tag & AML_RESOURCE_SMALL_TAG_TYPE( Tag ) ) != 0 ) ) {
         //
         // Byte 1 - Length of data items bits [7:0].
         // Byte 2 - Length of data items bits [15:8].
