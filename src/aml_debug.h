@@ -16,7 +16,7 @@
 // If no log level build option was set, default to only showing warning levels and higher.
 //
 #ifndef AML_BUILD_DEBUG_LEVEL
- #define AML_BUILD_DEBUG_LEVEL AML_DEBUG_LEVEL_TRACE
+ #define AML_BUILD_DEBUG_LEVEL AML_DEBUG_LEVEL_WARNING
 #endif
 
 //
