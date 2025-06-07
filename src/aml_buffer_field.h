@@ -9,13 +9,13 @@
 _Success_( return )
 BOOLEAN
 AmlBufferFieldRead(
-	_In_                                 const struct _AML_STATE*         State,
-	_In_                                 struct _AML_OBJECT_BUFFER_FIELD* Field,
-	_Out_writes_bytes_( ResultDataSize ) VOID*                            ResultData,
-	_In_                                 SIZE_T                           ResultDataSize,
-	_In_                                 BOOLEAN                          AllowTruncation,
-	_Out_opt_                            SIZE_T*                          pResultBitCount
-	);
+    _In_                                 const struct _AML_STATE*         State,
+    _In_                                 struct _AML_OBJECT_BUFFER_FIELD* Field,
+    _Out_writes_bytes_( ResultDataSize ) VOID*                            ResultData,
+    _In_                                 SIZE_T                           ResultDataSize,
+    _In_                                 BOOLEAN                          AllowTruncation,
+    _Out_opt_                            SIZE_T*                          pResultBitCount
+    );
 
 //
 // Write data to the given buffer field from the input data array.
@@ -24,9 +24,9 @@ AmlBufferFieldRead(
 _Success_( return )
 BOOLEAN
 AmlBufferFieldWrite(
-	_In_                              const struct _AML_STATE*         State,
-	_In_                              struct _AML_OBJECT_BUFFER_FIELD* Field,
-	_In_reads_bytes_( InputDataSize ) const VOID*                      InputData,
-	_In_                              SIZE_T                           InputDataSize,
-	_In_                              BOOLEAN                          AllowTruncation
-	);
+    _In_                              const struct _AML_STATE*         State,
+    _In_                              struct _AML_OBJECT_BUFFER_FIELD* Field,
+    _In_reads_bytes_( InputDataSize ) const VOID*                      InputData,
+    _In_                              SIZE_T                           InputDataSize,
+    _In_                              BOOLEAN                          AllowTruncation
+    );

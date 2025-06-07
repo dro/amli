@@ -10,9 +10,9 @@
 _Success_( return )
 BOOLEAN
 AmlEvalDevice(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // Evaluate a DefMethod instruction.
@@ -21,9 +21,9 @@ AmlEvalDevice(
 _Success_( return )
 BOOLEAN
 AmlEvalMethod(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // DefExternal := ExternalOp NameString ObjectType ArgumentCount
@@ -31,9 +31,9 @@ AmlEvalMethod(
 _Success_( return )
 BOOLEAN
 AmlEvalExternal(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // DefProcessor := ProcessorOp PkgLength NameString ProcID PblkAddr PblkLen TermList
@@ -41,9 +41,9 @@ AmlEvalExternal(
 _Success_( return )
 BOOLEAN
 AmlEvalProcessor(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // DefPowerRes := PowerResOp PkgLength NameString SystemLevel ResourceOrder TermList
@@ -51,9 +51,9 @@ AmlEvalProcessor(
 _Success_( return )
 BOOLEAN
 AmlEvalPowerRes(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // DefThermalZone := ThermalZoneOp PkgLength NameString TermList
@@ -61,9 +61,9 @@ AmlEvalPowerRes(
 _Success_( return )
 BOOLEAN
 AmlEvalThermalZone(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // Evalute named object opcodes.
@@ -75,5 +75,5 @@ AmlEvalThermalZone(
 _Success_( return )
 BOOLEAN
 AmlEvalNamedObjectOpcode(
-	_Inout_ AML_STATE* State
-	);
+    _Inout_ AML_STATE* State
+    );

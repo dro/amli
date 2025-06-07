@@ -25,11 +25,11 @@
 _Success_( return )
 BOOLEAN
 AmlEvalLoadedTableCode(
-	_Inout_                           AML_STATE*             State,
-	_In_reads_bytes_( TableCodeSize ) const VOID*            TableCode,
-	_In_                              SIZE_T                 TableCodeSize,
-	_In_opt_                          const AML_NAME_STRING* TableRootPath
-	);
+    _Inout_                           AML_STATE*             State,
+    _In_reads_bytes_( TableCodeSize ) const VOID*            TableCode,
+    _In_                              SIZE_T                 TableCodeSize,
+    _In_opt_                          const AML_NAME_STRING* TableRootPath
+    );
 
 //
 // Evaluate a method invocation to a created method object.
@@ -38,10 +38,10 @@ AmlEvalLoadedTableCode(
 _Success_( return )
 BOOLEAN
 AmlEvalMethodInvocation(
-	_Inout_   AML_STATE* State,
-	_In_      UINT       Flags,
-	_Out_opt_ AML_DATA*  pReturnValueOutput
-	);
+    _Inout_   AML_STATE* State,
+    _In_      UINT       Flags,
+    _Out_opt_ AML_DATA*  pReturnValueOutput
+    );
 
 //
 // Evaluate and resolve the given AML_SUPER_NAME to an object.
@@ -50,11 +50,11 @@ AmlEvalMethodInvocation(
 _Success_( return )
 BOOLEAN
 AmlEvalSuperName(
-	_Inout_  AML_STATE*   State,
-	_In_     UINT         SearchFlags,
-	_In_     UINT         NameFlags,
-	_Outptr_ AML_OBJECT** ppObject
-	);
+    _Inout_  AML_STATE*   State,
+    _In_     UINT         SearchFlags,
+    _In_     UINT         NameFlags,
+    _Outptr_ AML_OBJECT** ppObject
+    );
 
 //
 // Decode and resolve a SimpleName from the input stream.
@@ -62,11 +62,11 @@ AmlEvalSuperName(
 _Success_( return )
 BOOLEAN
 AmlEvalSimpleName(
-	_Inout_  AML_STATE*   State,
-	_In_     UINT         SearchFlags,
-	_In_     UINT         NameFlags,
-	_Outptr_ AML_OBJECT** ppObject
-	);
+    _Inout_  AML_STATE*   State,
+    _In_     UINT         SearchFlags,
+    _In_     UINT         NameFlags,
+    _Outptr_ AML_OBJECT** ppObject
+    );
 
 //
 // Evaluate a TermArg.
@@ -75,10 +75,10 @@ AmlEvalSimpleName(
 _Success_( return )
 BOOLEAN
 AmlEvalTermArg(
-	_Inout_ AML_STATE* State,
-	_In_    UINT       TermArgFlags,
-	_Out_   AML_DATA*  ValueData
-	);
+    _Inout_ AML_STATE* State,
+    _In_    UINT       TermArgFlags,
+    _Out_   AML_DATA*  ValueData
+    );
 
 //
 // Attempt to evaluate a TermArg and then apply implicit conversion to the given type.
@@ -87,11 +87,11 @@ AmlEvalTermArg(
 _Success_( return )
 BOOLEAN
 AmlEvalTermArgToType(
-	_Inout_ AML_STATE*    State,
-	_In_    UINT          TermArgFlags,
-	_In_    AML_DATA_TYPE ConversionType,
-	_Out_   AML_DATA*     ValueData
-	);
+    _Inout_ AML_STATE*    State,
+    _In_    UINT          TermArgFlags,
+    _In_    AML_DATA_TYPE ConversionType,
+    _Out_   AML_DATA*     ValueData
+    );
 
 //
 // Attempt to evaluate an entire block of code until reaching the end.
@@ -99,11 +99,11 @@ AmlEvalTermArgToType(
 _Success_( return )
 BOOLEAN
 AmlEvalTermListCode(
-	_Inout_ AML_STATE* State,
-	_In_    SIZE_T     CodeStart,
-	_In_    SIZE_T     CodeSize,
-	_In_    BOOLEAN    RestoreDataCursor
-	);
+    _Inout_ AML_STATE* State,
+    _In_    SIZE_T     CodeStart,
+    _In_    SIZE_T     CodeSize,
+    _In_    BOOLEAN    RestoreDataCursor
+    );
 
 //
 // Evaluate a DataObject.
@@ -112,10 +112,10 @@ AmlEvalTermListCode(
 _Success_( return )
 BOOLEAN
 AmlEvalDataObject(
-	_Inout_ AML_STATE* State,
-	_Out_   AML_DATA*  Data,
-	_In_    BOOLEAN    IsTemporary
-	);
+    _Inout_ AML_STATE* State,
+    _Out_   AML_DATA*  Data,
+    _In_    BOOLEAN    IsTemporary
+    );
 
 //
 // Evaluate and resolve the given SuperName or NullName to an object.
@@ -125,10 +125,10 @@ AmlEvalDataObject(
 _Success_( return )
 BOOLEAN
 AmlEvalTarget(
-	_Inout_  AML_STATE*   State,
-	_In_     UINT         SearchFlags,
-	_Outptr_ AML_OBJECT** ppObject
-	);
+    _Inout_  AML_STATE*   State,
+    _In_     UINT         SearchFlags,
+    _Outptr_ AML_OBJECT** ppObject
+    );
 
 //
 // Evaluate a RefOf instruction to an object.
@@ -136,10 +136,10 @@ AmlEvalTarget(
 _Success_( return )
 BOOLEAN
 AmlEvalRefOf(
-	_Inout_  AML_STATE*   State,
-	_In_     BOOLEAN      ConsumeOpcode,
-	_Outptr_ AML_OBJECT** ppObject
-	);
+    _Inout_  AML_STATE*   State,
+    _In_     BOOLEAN      ConsumeOpcode,
+    _Outptr_ AML_OBJECT** ppObject
+    );
 
 //
 // Evaluate DerefOf instruction to an object.
@@ -149,10 +149,10 @@ AmlEvalRefOf(
 _Success_( return )
 BOOLEAN
 AmlEvalDerefOf(
-	_Inout_  AML_STATE*   State,
-	_In_     BOOLEAN      ConsumeOpcode,
-	_Outptr_ AML_OBJECT** ppObject
-	);
+    _Inout_  AML_STATE*   State,
+    _In_     BOOLEAN      ConsumeOpcode,
+    _Outptr_ AML_OBJECT** ppObject
+    );
 
 //
 // Evaluate IndexOp.
@@ -165,10 +165,10 @@ AmlEvalDerefOf(
 _Success_( return )
 BOOLEAN
 AmlEvalIndex(
-	_Inout_  AML_STATE*   State,
-	_In_     BOOLEAN      ConsumeOpcode,
-	_Outptr_ AML_OBJECT** ppObject
-	);
+    _Inout_  AML_STATE*   State,
+    _In_     BOOLEAN      ConsumeOpcode,
+    _Outptr_ AML_OBJECT** ppObject
+    );
 
 //
 // Evaluate a method invocation to a created method object,
@@ -178,11 +178,11 @@ AmlEvalIndex(
 _Success_( return )
 BOOLEAN
 AmlEvalMethodInvocationInternal(
-	_Inout_   AML_STATE*  State,
-	_Inout_   AML_OBJECT* MethodObject,
-	_In_      UINT        Flags,
-	_Out_opt_ AML_DATA*   pReturnValueOutput
-	);
+    _Inout_   AML_STATE*  State,
+    _Inout_   AML_OBJECT* MethodObject,
+    _In_      UINT        Flags,
+    _Out_opt_ AML_DATA*   pReturnValueOutput
+    );
 
 //
 // Resolve the given AML_SIMPLE_NAME to an operand meta structure.
@@ -191,13 +191,13 @@ AmlEvalMethodInvocationInternal(
 _Success_( return )
 BOOLEAN
 AmlResolveSimpleName(
-	_Inout_  AML_STATE*             State,
-	_In_opt_ AML_METHOD_SCOPE*      MethodScope,
-	_In_     const AML_SIMPLE_NAME* Target,
-	_In_     UINT                   SearchFlags,
-	_In_     UINT                   NameFlags,
-	_Outptr_ AML_OBJECT**           ppObject
-	);
+    _Inout_  AML_STATE*             State,
+    _In_opt_ AML_METHOD_SCOPE*      MethodScope,
+    _In_     const AML_SIMPLE_NAME* Target,
+    _In_     UINT                   SearchFlags,
+    _In_     UINT                   NameFlags,
+    _Outptr_ AML_OBJECT**           ppObject
+    );
 
 //
 // Store to a target simple name operand, with implicit conversion rules applied.
@@ -206,12 +206,12 @@ AmlResolveSimpleName(
 _Success_( return )
 BOOLEAN
 AmlOperandStore(
-	_Inout_ AML_STATE*      State,
-	_Inout_ AML_HEAP*       Heap,
-	_In_    const AML_DATA* Value,
-	_Inout_ AML_OBJECT*     Target,
-	_In_    BOOLEAN         ImplicitConversion
-	);
+    _Inout_ AML_STATE*      State,
+    _Inout_ AML_HEAP*       Heap,
+    _In_    const AML_DATA* Value,
+    _Inout_ AML_OBJECT*     Target,
+    _In_    BOOLEAN         ImplicitConversion
+    );
 
 //
 // Attempt to evaluate the given object to data.
@@ -222,11 +222,11 @@ AmlOperandStore(
 _Success_( return )
 BOOLEAN
 AmlEvalObject(
-	_Inout_     AML_STATE*  State,
-	_Inout_opt_ AML_OBJECT* Object,
-	_Out_       AML_DATA*   Output,
-	_In_        BOOLEAN     ToPrimitive
-	);
+    _Inout_     AML_STATE*  State,
+    _Inout_opt_ AML_OBJECT* Object,
+    _Out_       AML_DATA*   Output,
+    _In_        BOOLEAN     ToPrimitive
+    );
 
 //
 // Attempt to evaluate the given object to data of the given type.
@@ -238,12 +238,12 @@ AmlEvalObject(
 _Success_( return )
 BOOLEAN
 AmlEvalObjectOfType(
-	_Inout_     AML_STATE*    State,
-	_Inout_opt_ AML_OBJECT*   Object,
-	_Out_       AML_DATA*     Output,
-	_In_        BOOLEAN       ToPrimitive,
-	_In_        AML_DATA_TYPE TypeConstraint
-	);
+    _Inout_     AML_STATE*    State,
+    _Inout_opt_ AML_OBJECT*   Object,
+    _Out_       AML_DATA*     Output,
+    _In_        BOOLEAN       ToPrimitive,
+    _In_        AML_DATA_TYPE TypeConstraint
+    );
 
 //
 // Attempt to evaluate the _HID and _CID values of the given node.
@@ -251,12 +251,12 @@ AmlEvalObjectOfType(
 _Success_( return )
 BOOLEAN
 AmlEvalNodeDeviceId(
-	_Inout_   AML_STATE*          State,
-	_In_      AML_NAMESPACE_NODE* Node,
-	_Out_opt_ AML_DATA*           HidValue,
-	_Out_opt_ AML_DATA*           CidValue,
-	_In_      BOOLEAN             SearchAncestors
-	);
+    _Inout_   AML_STATE*          State,
+    _In_      AML_NAMESPACE_NODE* Node,
+    _Out_opt_ AML_DATA*           HidValue,
+    _Out_opt_ AML_DATA*           CidValue,
+    _In_      BOOLEAN             SearchAncestors
+    );
 
 //
 // Attempt to search for the given ChildName relative to the input Node,
@@ -268,14 +268,14 @@ AmlEvalNodeDeviceId(
 _Success_( return )
 BOOLEAN
 AmlEvalNodeChild(
-	_Inout_   AML_STATE*             State,
-	_In_      AML_NAMESPACE_NODE*    Node,
-	_In_      const AML_NAME_STRING* ChildName,
-	_In_opt_  AML_DATA_TYPE          TypeRequirement,
-	_In_      BOOLEAN                SearchAncestors,
-	_In_      BOOLEAN                ToPrimitive,
-	_Out_opt_ AML_DATA*              Result
-	);
+    _Inout_   AML_STATE*             State,
+    _In_      AML_NAMESPACE_NODE*    Node,
+    _In_      const AML_NAME_STRING* ChildName,
+    _In_opt_  AML_DATA_TYPE          TypeRequirement,
+    _In_      BOOLEAN                SearchAncestors,
+    _In_      BOOLEAN                ToPrimitive,
+    _Out_opt_ AML_DATA*              Result
+    );
 
 //
 // Attempt to search for the given ChildName relative to the input Node,
@@ -287,14 +287,14 @@ AmlEvalNodeChild(
 _Success_( return )
 BOOLEAN
 AmlEvalNodeChildZ(
-	_Inout_   AML_STATE*          State,
-	_In_      AML_NAMESPACE_NODE* Node,
-	_In_      const CHAR*         ChildName,
-	_In_opt_  AML_DATA_TYPE       TypeRequirement,
-	_In_      BOOLEAN             SearchAncestors,
-	_In_      BOOLEAN             ToPrimitive,
-	_Out_opt_ AML_DATA*           Result
-	);
+    _Inout_   AML_STATE*          State,
+    _In_      AML_NAMESPACE_NODE* Node,
+    _In_      const CHAR*         ChildName,
+    _In_opt_  AML_DATA_TYPE       TypeRequirement,
+    _In_      BOOLEAN             SearchAncestors,
+    _In_      BOOLEAN             ToPrimitive,
+    _Out_opt_ AML_DATA*           Result
+    );
 
 //
 // Attempt to search for the given node's parent PCI(e) root bus.
@@ -303,9 +303,9 @@ AmlEvalNodeChildZ(
 _Success_( return != NULL )
 AML_NAMESPACE_NODE*
 AmlEvalNodePciParentRootBus(
-	_Inout_ AML_STATE*          State,
-	_In_    AML_NAMESPACE_NODE* Node
-	);
+    _Inout_ AML_STATE*          State,
+    _In_    AML_NAMESPACE_NODE* Node
+    );
 
 //
 // Attempt to search for and evalute the full SBDF address for the given PCI device object.
@@ -314,12 +314,12 @@ AmlEvalNodePciParentRootBus(
 _Success_( return )
 BOOLEAN
 AmlEvalNodePciAddressLocal(
-	_Inout_      AML_STATE*            State,
-	_In_opt_     AML_NAMESPACE_NODE*   Node,
-	_Out_        AML_PCI_SBDF_ADDRESS* Output,
-	_Outptr_opt_ AML_NAMESPACE_NODE**  ppParentDevice,
-	_Outptr_opt_ AML_NAMESPACE_NODE**  ppRootBus
-	);
+    _Inout_      AML_STATE*            State,
+    _In_opt_     AML_NAMESPACE_NODE*   Node,
+    _Out_        AML_PCI_SBDF_ADDRESS* Output,
+    _Outptr_opt_ AML_NAMESPACE_NODE**  ppParentDevice,
+    _Outptr_opt_ AML_NAMESPACE_NODE**  ppRootBus
+    );
 
 //
 // Attempt to evaluate the full PCI hierarchy of the given node.
@@ -329,10 +329,10 @@ AmlEvalNodePciAddressLocal(
 _Success_( return )
 BOOLEAN
 AmlEvalNodePciInformation(
-	_Inout_  AML_STATE*           State,
-	_In_opt_ AML_NAMESPACE_NODE*  Node,
-	_Out_    AML_PCI_INFORMATION* Output
-	);
+    _Inout_  AML_STATE*           State,
+    _In_opt_ AML_NAMESPACE_NODE*  Node,
+    _Out_    AML_PCI_INFORMATION* Output
+    );
 
 //
 // Attempt to evaluate the _STA of the given device node.
@@ -342,7 +342,7 @@ AmlEvalNodePciInformation(
 _Success_( return )
 BOOLEAN
 AmlEvalNodeDeviceStatus(
-	_Inout_ AML_STATE*          State,
-	_In_    AML_NAMESPACE_NODE* DeviceNode,
-	_Out_   UINT32*             Result
-	);
+    _Inout_ AML_STATE*          State,
+    _In_    AML_NAMESPACE_NODE* DeviceNode,
+    _Out_   UINT32*             Result
+    );

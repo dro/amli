@@ -294,7 +294,7 @@
 //
 #pragma pack(push, 1)
 typedef struct _AML_OEM_ID {
-	UINT8 Data[ 6 ];
+    UINT8 Data[ 6 ];
 } AML_OEM_ID;
 #pragma pack(pop)
 
@@ -303,15 +303,15 @@ typedef struct _AML_OEM_ID {
 //
 #pragma pack(push, 1)
 typedef struct _AML_DESCRIPTION_HEADER {
-	UINT32     Signature;
-	UINT32     Length;
-	UINT8      Revision;
-	UINT8      Checksum;
-	AML_OEM_ID OemId;
-	UINT64     OemTableId;
-	UINT32     OemRevision;
-	UINT32     CreatorId;
-	UINT32     CreatorRevision;
+    UINT32     Signature;
+    UINT32     Length;
+    UINT8      Revision;
+    UINT8      Checksum;
+    AML_OEM_ID OemId;
+    UINT64     OemTableId;
+    UINT32     OemRevision;
+    UINT32     CreatorId;
+    UINT32     CreatorRevision;
 } AML_DESCRIPTION_HEADER;
 #pragma pack(pop)
 
@@ -319,9 +319,9 @@ typedef struct _AML_DESCRIPTION_HEADER {
 // Event/mutex await status.
 //
 typedef enum _AML_WAIT_STATUS {
-	AML_WAIT_STATUS_SUCCESS,
-	AML_WAIT_STATUS_TIMEOUT,
-	AML_WAIT_STATUS_ERROR,
+    AML_WAIT_STATUS_SUCCESS,
+    AML_WAIT_STATUS_TIMEOUT,
+    AML_WAIT_STATUS_ERROR,
 } AML_WAIT_STATUS;
 
 //
@@ -359,6 +359,6 @@ AmlMemorySet(
 //
 UINT32
 AmlRotateLeft32(
-	_In_ UINT32 Value,
-	_In_ UINT32 Shift
-	);
+    _In_ UINT32 Value,
+    _In_ UINT32 Shift
+    );

@@ -11,9 +11,9 @@
 _Success_( return )
 BOOLEAN
 AmlEvalName(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // Attempt to evaluate a scope instruction.
@@ -21,9 +21,9 @@ AmlEvalName(
 _Success_( return )
 BOOLEAN
 AmlEvalScope(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // Attempt to evaluate an alias instruction.
@@ -31,9 +31,9 @@ AmlEvalScope(
 _Success_( return )
 BOOLEAN
 AmlEvalAlias(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // Attempt to evaluate a namespace modifier object opcode.
@@ -42,5 +42,5 @@ AmlEvalAlias(
 _Success_( return )
 BOOLEAN
 AmlEvalNamespaceModifierObjectOpcode(
-	_Inout_ AML_STATE* State
-	);
+    _Inout_ AML_STATE* State
+    );

@@ -9,7 +9,7 @@
 _Success_( return )
 BOOLEAN
 AmlEvalExpressionOpcode(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    EvalMethodInvocation,
-	_Out_   AML_DATA*  EvalResult
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    EvalMethodInvocation,
+    _Out_   AML_DATA*  EvalResult
+    );

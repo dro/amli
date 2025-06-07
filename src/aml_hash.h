@@ -7,7 +7,7 @@
 //
 UINT32
 AmlHashKey32(
-	_In_reads_bytes_( KeyLength ) const VOID* Key,
-	_In_                          SIZE_T      KeyLength,
-	_In_                          UINT32      Seed
-	);
+    _In_reads_bytes_( KeyLength ) const VOID* Key,
+    _In_                          SIZE_T      KeyLength,
+    _In_                          UINT32      Seed
+    );

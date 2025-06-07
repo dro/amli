@@ -22,9 +22,9 @@
 _Success_( return )
 BOOLEAN
 AmlEvalIfElse(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // Predicate := TermArg => Integer
@@ -33,9 +33,9 @@ AmlEvalIfElse(
 _Success_( return )
 BOOLEAN
 AmlEvalWhile(
-	_Inout_ AML_STATE* State,
-	_In_    BOOLEAN    ConsumeOpcode
-	);
+    _Inout_ AML_STATE* State,
+    _In_    BOOLEAN    ConsumeOpcode
+    );
 
 //
 // Evaluate a StatementOpcode.
@@ -45,5 +45,5 @@ AmlEvalWhile(
 _Success_( return )
 BOOLEAN
 AmlEvalStatementOpcode(
-	_Inout_ AML_STATE* State
-	);
+    _Inout_ AML_STATE* State
+    );

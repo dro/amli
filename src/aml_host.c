@@ -14,34 +14,34 @@
 //
 BOOLEAN
 AmlHostGlobalLockTryAcquire(
-	_Inout_ AML_HOST_CONTEXT* Host
-	)
+    _Inout_ AML_HOST_CONTEXT* Host
+    )
 {
-	ULONG Current;
-	ULONG Desired;
+    ULONG Current;
+    ULONG Desired;
 
-	//
-	// If no global lock is present, assume that we always have access.
-	//
-	if( Host->GlobalLock == NULL ) {
-		return AML_TRUE;
-	}
+    //
+    // If no global lock is present, assume that we always have access.
+    //
+    if( Host->GlobalLock == NULL ) {
+        return AML_TRUE;
+    }
 
-	// Read the current value of the global lock, and set it up with our desired value.
-	// If the lock is already owned, the pending bit will be set.
-	// If the lock isn't owned, we will take ownership of the lock.
-	//
-	do {
-		Current  = *Host->GlobalLock;
-		Desired  = ( Current & ~ACPI_GLOBAL_LOCK_PENDING_FLAG );       /* Clear pending bit. */
-		Desired |= ACPI_GLOBAL_LOCK_OWNED_FLAG;                        /* Set owned bit in desired value. */
-		Desired |= ( ( Current & ACPI_GLOBAL_LOCK_OWNED_FLAG ) >> 1 ); /* If already owned, set pending bit. */
-	} while( _InterlockedCompareExchange( Host->GlobalLock, Desired, Current ) != Desired );
+    // Read the current value of the global lock, and set it up with our desired value.
+    // If the lock is already owned, the pending bit will be set.
+    // If the lock isn't owned, we will take ownership of the lock.
+    //
+    do {
+        Current  = *Host->GlobalLock;
+        Desired  = ( Current & ~ACPI_GLOBAL_LOCK_PENDING_FLAG );       /* Clear pending bit. */
+        Desired |= ACPI_GLOBAL_LOCK_OWNED_FLAG;                        /* Set owned bit in desired value. */
+        Desired |= ( ( Current & ACPI_GLOBAL_LOCK_OWNED_FLAG ) >> 1 ); /* If already owned, set pending bit. */
+    } while( _InterlockedCompareExchange( Host->GlobalLock, Desired, Current ) != Desired );
 
-	//
-	// Indicate to the caller if we have taken ownership or just set the pending bit. 
-	//
-	return ( ( Desired & ( ACPI_GLOBAL_LOCK_OWNED_FLAG | ACPI_GLOBAL_LOCK_PENDING_FLAG ) ) == ACPI_GLOBAL_LOCK_OWNED_FLAG );
+    //
+    // Indicate to the caller if we have taken ownership or just set the pending bit. 
+    //
+    return ( ( Desired & ( ACPI_GLOBAL_LOCK_OWNED_FLAG | ACPI_GLOBAL_LOCK_PENDING_FLAG ) ) == ACPI_GLOBAL_LOCK_OWNED_FLAG );
 }
 
 //
@@ -50,34 +50,34 @@ AmlHostGlobalLockTryAcquire(
 //
 BOOLEAN
 AmlHostGlobalLockRelease(
-	_Inout_ AML_HOST_CONTEXT* Host
-	)
+    _Inout_ AML_HOST_CONTEXT* Host
+    )
 {
-	ULONG Current;
-	ULONG Desired;
+    ULONG Current;
+    ULONG Desired;
 
-	//
-	// If no global lock is present, assume that we always have access.
-	//
-	if( Host->GlobalLock == NULL ) {
-		return AML_TRUE;
-	}
+    //
+    // If no global lock is present, assume that we always have access.
+    //
+    if( Host->GlobalLock == NULL ) {
+        return AML_TRUE;
+    }
 
-	//
-	// Attempt to clear the owned and pending field, fully releasing the lock.
-	//
-	do {
-		Current = *Host->GlobalLock;
-		Desired = ( Current & ~( ACPI_GLOBAL_LOCK_PENDING_FLAG | ACPI_GLOBAL_LOCK_OWNED_FLAG ) ); /* Clear owned and pending field. */
-	} while( _InterlockedCompareExchange( Host->GlobalLock, Desired, Current ) != Desired );
+    //
+    // Attempt to clear the owned and pending field, fully releasing the lock.
+    //
+    do {
+        Current = *Host->GlobalLock;
+        Desired = ( Current & ~( ACPI_GLOBAL_LOCK_PENDING_FLAG | ACPI_GLOBAL_LOCK_OWNED_FLAG ) ); /* Clear owned and pending field. */
+    } while( _InterlockedCompareExchange( Host->GlobalLock, Desired, Current ) != Desired );
 
-	//
-	// Return AML_TRUE if the lock was originally pending, in this case,
-	// the caller should signal that the lock was released, so that
-	// any pending code waiting on the lock can attempt to acquire it.
-	// (GBL_RLS or BIOS_RLS).
-	//
-	return ( ( Current & ACPI_GLOBAL_LOCK_PENDING_FLAG ) != 0 );
+    //
+    // Return AML_TRUE if the lock was originally pending, in this case,
+    // the caller should signal that the lock was released, so that
+    // any pending code waiting on the lock can attempt to acquire it.
+    // (GBL_RLS or BIOS_RLS).
+    //
+    return ( ( Current & ACPI_GLOBAL_LOCK_PENDING_FLAG ) != 0 );
 }
 
 //
@@ -85,10 +85,10 @@ AmlHostGlobalLockRelease(
 //
 VOID
 AmlHostOnDeviceInitialized(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_Inout_ AML_OBJECT*       Object,
-	_In_    UINT32            DeviceStatus
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _Inout_ AML_OBJECT*       Object,
+    _In_    UINT32            DeviceStatus
+    )
 {
 
 }
@@ -98,11 +98,11 @@ AmlHostOnDeviceInitialized(
 //
 VOID
 AmlHostDebugPrintV(
-	_In_   struct _AML_HOST_CONTEXT* Host,
-	_In_   INT                       LogLevel,
-	_In_z_ const CHAR*               Format,
-	_In_   va_list                   VaList
-	)
+    _In_   struct _AML_HOST_CONTEXT* Host,
+    _In_   INT                       LogLevel,
+    _In_z_ const CHAR*               Format,
+    _In_   va_list                   VaList
+    )
 {
 
 }
@@ -115,15 +115,15 @@ AmlHostDebugPrintV(
 _Success_( return )
 BOOLEAN
 AmlHostMemoryMap(
-	_Inout_  AML_HOST_CONTEXT* Host,
-	_In_     UINT64            PhysicalAddress,
-	_In_     UINT64            Size,
-	_In_     UINT32            Flags,
-	_Outptr_ VOID**            ppMappedAddress
-	)
+    _Inout_  AML_HOST_CONTEXT* Host,
+    _In_     UINT64            PhysicalAddress,
+    _In_     UINT64            Size,
+    _In_     UINT32            Flags,
+    _Outptr_ VOID**            ppMappedAddress
+    )
 {
-	*ppMappedAddress = ( VOID* )PhysicalAddress;
-	return AML_TRUE;
+    *ppMappedAddress = ( VOID* )PhysicalAddress;
+    return AML_TRUE;
 }
 
 //
@@ -132,12 +132,12 @@ AmlHostMemoryMap(
 _Success_( return )
 BOOLEAN
 AmlHostMemoryUnmap(
-	_Inout_  AML_HOST_CONTEXT* Host,
-	_In_     VOID*             MappedAddress,
-	_In_     UINT64            Size
-	)
+    _Inout_  AML_HOST_CONTEXT* Host,
+    _In_     VOID*             MappedAddress,
+    _In_     UINT64            Size
+    )
 {
-	return AML_TRUE;
+    return AML_TRUE;
 }
 
 //
@@ -147,13 +147,13 @@ AmlHostMemoryUnmap(
 _Success_( return != NULL )
 AML_DESCRIPTION_HEADER*
 AmlHostSearchAcpiTableEx(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT32            Signature,
-	_In_    AML_OEM_ID        OemId,
-	_In_    UINT64            OemTableId
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT32            Signature,
+    _In_    AML_OEM_ID        OemId,
+    _In_    UINT64            OemTableId
+    )
 {
-	return NULL;
+    return NULL;
 }
 
 //
@@ -162,12 +162,12 @@ AmlHostSearchAcpiTableEx(
 _Success_( return )
 BOOLEAN
 AmlHostMutexCreate(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_Out_   UINT64*           MutexHandleOutput
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _Out_   UINT64*           MutexHandleOutput
+    )
 {
-	*MutexHandleOutput = UINT64_MAX;
-	return AML_TRUE;
+    *MutexHandleOutput = UINT64_MAX;
+    return AML_TRUE;
 }
 
 //
@@ -176,12 +176,12 @@ AmlHostMutexCreate(
 //
 AML_WAIT_STATUS
 AmlHostMutexAcquire(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MutexHandle,
-	_In_    UINT64            TimeoutMs
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MutexHandle,
+    _In_    UINT64            TimeoutMs
+    )
 {
-	return AML_WAIT_STATUS_SUCCESS;
+    return AML_WAIT_STATUS_SUCCESS;
 }
 
 //
@@ -189,11 +189,11 @@ AmlHostMutexAcquire(
 //
 VOID
 AmlHostMutexRelease(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MutexHandle
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MutexHandle
+    )
 {
-	
+    
 }
 
 //
@@ -201,11 +201,11 @@ AmlHostMutexRelease(
 //
 VOID
 AmlHostMutexFree(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MutexHandle
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MutexHandle
+    )
 {
-	
+    
 }
 
 
@@ -215,12 +215,12 @@ AmlHostMutexFree(
 _Success_( return )
 BOOLEAN
 AmlHostEventCreate(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_Out_   UINT64*           EventHandleOutput
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _Out_   UINT64*           EventHandleOutput
+    )
 {
-	*EventHandleOutput = UINT64_MAX;
-	return AML_TRUE;
+    *EventHandleOutput = UINT64_MAX;
+    return AML_TRUE;
 }
 
 //
@@ -228,9 +228,9 @@ AmlHostEventCreate(
 //
 VOID
 AmlHostEventFree(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            EventHandle
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            EventHandle
+    )
 {
 
 }
@@ -240,9 +240,9 @@ AmlHostEventFree(
 //
 VOID
 AmlHostEventSignal(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            EventHandle
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            EventHandle
+    )
 {
 
 }
@@ -252,9 +252,9 @@ AmlHostEventSignal(
 //
 VOID
 AmlHostEventReset(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            EventHandle
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            EventHandle
+    )
 {
 
 }
@@ -265,12 +265,12 @@ AmlHostEventReset(
 //
 AML_WAIT_STATUS
 AmlHostEventAwait(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            EventHandle,
-	_In_    UINT64            TimeoutMs
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            EventHandle,
+    _In_    UINT64            TimeoutMs
+    )
 {
-	return AML_WAIT_STATUS_SUCCESS;
+    return AML_WAIT_STATUS_SUCCESS;
 }
 
 
@@ -279,12 +279,12 @@ AmlHostEventAwait(
 //
 VOID
 AmlHostObjectNotification(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_Inout_ AML_OBJECT*       Object,
-	_In_    UINT64            NotificationValue
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _Inout_ AML_OBJECT*       Object,
+    _In_    UINT64            NotificationValue
+    )
 {
-	
+    
 }
 
 //
@@ -294,9 +294,9 @@ AmlHostObjectNotification(
 //
 VOID
 AmlHostSleep(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            Milliseconds
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            Milliseconds
+    )
 {
 
 }
@@ -307,20 +307,20 @@ AmlHostSleep(
 //
 VOID
 AmlHostStall(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MicroSeconds
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MicroSeconds
+    )
 {
-	UINT64 End;
+    UINT64 End;
 
-	//
-	// Attempt to stall the current processor for the given amount of microseconds (or a reasonable cap).
-	//
-	MicroSeconds = AML_MIN( MicroSeconds, ( 100 + 50 ) );
-	End = ( AmlHostMonotonicTimer( Host ) + ( MicroSeconds * 1000 ) );
-	while( AmlHostMonotonicTimer( Host ) < End ) {
-		AML_PAUSE();
-	}
+    //
+    // Attempt to stall the current processor for the given amount of microseconds (or a reasonable cap).
+    //
+    MicroSeconds = AML_MIN( MicroSeconds, ( 100 + 50 ) );
+    End = ( AmlHostMonotonicTimer( Host ) + ( MicroSeconds * 1000 ) );
+    while( AmlHostMonotonicTimer( Host ) < End ) {
+        AML_PAUSE();
+    }
 }
 
 //
@@ -329,13 +329,13 @@ AmlHostStall(
 //
 UINT64
 AmlHostMonotonicTimer(
-	_Inout_ AML_HOST_CONTEXT* Host
-	)
+    _Inout_ AML_HOST_CONTEXT* Host
+    )
 {
-	//
-	// Read stub timer value, not spec adherent (not 100ns).
-	//
-	return ( __rdtsc() / 400 );
+    //
+    // Read stub timer value, not spec adherent (not 100ns).
+    //
+    return ( __rdtsc() / 400 );
 }
 
 //
@@ -343,11 +343,11 @@ AmlHostMonotonicTimer(
 //
 UINT8
 AmlHostIoPortRead8(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT16            PortIndex
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT16            PortIndex
+    )
 {
-	return __inbyte( PortIndex );
+    return __inbyte( PortIndex );
 }
 
 //
@@ -355,11 +355,11 @@ AmlHostIoPortRead8(
 //
 UINT16
 AmlHostIoPortRead16(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT16            PortIndex
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT16            PortIndex
+    )
 {
-	return __inword( PortIndex );
+    return __inword( PortIndex );
 }
 
 //
@@ -367,11 +367,11 @@ AmlHostIoPortRead16(
 //
 UINT32
 AmlHostIoPortRead32(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT16            PortIndex
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT16            PortIndex
+    )
 {
-	return __indword( PortIndex );
+    return __indword( PortIndex );
 }
 
 //
@@ -379,12 +379,12 @@ AmlHostIoPortRead32(
 //
 VOID
 AmlHostIoPortWrite8(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT16            PortIndex,
-	_In_    UINT8             Value
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT16            PortIndex,
+    _In_    UINT8             Value
+    )
 {
-	__outbyte( PortIndex, Value );
+    __outbyte( PortIndex, Value );
 }
 
 //
@@ -392,12 +392,12 @@ AmlHostIoPortWrite8(
 //
 VOID
 AmlHostIoPortWrite16(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT16            PortIndex,
-	_In_    UINT16            Value
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT16            PortIndex,
+    _In_    UINT16            Value
+    )
 {
-	__outword( PortIndex, Value );
+    __outword( PortIndex, Value );
 }
 
 //
@@ -405,12 +405,12 @@ AmlHostIoPortWrite16(
 //
 VOID
 AmlHostIoPortWrite32(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT16            PortIndex,
-	_In_    UINT32            Value
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT16            PortIndex,
+    _In_    UINT32            Value
+    )
 {
-	__outdword( PortIndex, Value );
+    __outdword( PortIndex, Value );
 }
 
 //
@@ -418,11 +418,11 @@ AmlHostIoPortWrite32(
 //
 UINT8
 AmlHostMmioRead8(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MmioAddress
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MmioAddress
+    )
 {
-	return *( volatile UINT8* )MmioAddress;
+    return *( volatile UINT8* )MmioAddress;
 }
 
 //
@@ -430,11 +430,11 @@ AmlHostMmioRead8(
 //
 UINT16
 AmlHostMmioRead16(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MmioAddress
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MmioAddress
+    )
 {
-	return *( volatile UINT16* )MmioAddress;
+    return *( volatile UINT16* )MmioAddress;
 }
 
 //
@@ -442,11 +442,11 @@ AmlHostMmioRead16(
 //
 UINT32
 AmlHostMmioRead32(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MmioAddress
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MmioAddress
+    )
 {
-	return *( volatile UINT32* )MmioAddress;
+    return *( volatile UINT32* )MmioAddress;
 }
 
 //
@@ -454,11 +454,11 @@ AmlHostMmioRead32(
 //
 UINT64
 AmlHostMmioRead64(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MmioAddress
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MmioAddress
+    )
 {
-	return *( volatile UINT64* )MmioAddress;
+    return *( volatile UINT64* )MmioAddress;
 }
 
 //
@@ -466,12 +466,12 @@ AmlHostMmioRead64(
 //
 VOID
 AmlHostMmioWrite8(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MmioAddress,
-	_In_    UINT8             Value
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MmioAddress,
+    _In_    UINT8             Value
+    )
 {
-	*( volatile UINT8* )MmioAddress = Value;
+    *( volatile UINT8* )MmioAddress = Value;
 }
 
 //
@@ -479,12 +479,12 @@ AmlHostMmioWrite8(
 //
 VOID
 AmlHostMmioWrite16(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MmioAddress,
-	_In_    UINT16            Value
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MmioAddress,
+    _In_    UINT16            Value
+    )
 {
-	*( volatile UINT16* )MmioAddress = Value;
+    *( volatile UINT16* )MmioAddress = Value;
 }
 
 //
@@ -492,12 +492,12 @@ AmlHostMmioWrite16(
 //
 VOID
 AmlHostMmioWrite32(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MmioAddress,
-	_In_    UINT32            Value
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MmioAddress,
+    _In_    UINT32            Value
+    )
 {
-	*( volatile UINT32* )MmioAddress = Value;
+    *( volatile UINT32* )MmioAddress = Value;
 }
 
 //
@@ -505,12 +505,12 @@ AmlHostMmioWrite32(
 //
 VOID
 AmlHostMmioWrite64(
-	_Inout_ AML_HOST_CONTEXT* Host,
-	_In_    UINT64            MmioAddress,
-	_In_    UINT64            Value
-	)
+    _Inout_ AML_HOST_CONTEXT* Host,
+    _In_    UINT64            MmioAddress,
+    _In_    UINT64            Value
+    )
 {
-	*( volatile UINT64* )MmioAddress = Value;
+    *( volatile UINT64* )MmioAddress = Value;
 }
 
 //
@@ -518,12 +518,12 @@ AmlHostMmioWrite64(
 //
 UINT8
 AmlHostPciConfigRead8(
-	_Inout_ AML_HOST_CONTEXT*    Host,
-	_In_    AML_PCI_SBDF_ADDRESS Address,
-	_In_    UINT64               Offset
-	)	
+    _Inout_ AML_HOST_CONTEXT*    Host,
+    _In_    AML_PCI_SBDF_ADDRESS Address,
+    _In_    UINT64               Offset
+    )	
 {
-	return 0xFF;
+    return 0xFF;
 }
 
 //
@@ -531,12 +531,12 @@ AmlHostPciConfigRead8(
 //
 UINT16
 AmlHostPciConfigRead16(
-	_Inout_ AML_HOST_CONTEXT*    Host,
-	_In_    AML_PCI_SBDF_ADDRESS Address,
-	_In_    UINT64               Offset
-	)
+    _Inout_ AML_HOST_CONTEXT*    Host,
+    _In_    AML_PCI_SBDF_ADDRESS Address,
+    _In_    UINT64               Offset
+    )
 {
-	return 0xFFFF;
+    return 0xFFFF;
 }
 
 //
@@ -544,12 +544,12 @@ AmlHostPciConfigRead16(
 //
 UINT32
 AmlHostPciConfigRead32(
-	_Inout_ AML_HOST_CONTEXT*    Host,
-	_In_    AML_PCI_SBDF_ADDRESS Address,
-	_In_    UINT64               Offset
-	)
+    _Inout_ AML_HOST_CONTEXT*    Host,
+    _In_    AML_PCI_SBDF_ADDRESS Address,
+    _In_    UINT64               Offset
+    )
 {
-	return 0xFFFFFFFF;
+    return 0xFFFFFFFF;
 }
 
 //
@@ -557,12 +557,12 @@ AmlHostPciConfigRead32(
 //
 UINT64
 AmlHostPciConfigRead64(
-	_Inout_ AML_HOST_CONTEXT*    Host,
-	_In_    AML_PCI_SBDF_ADDRESS Address,
-	_In_    UINT64               Offset
-	)
+    _Inout_ AML_HOST_CONTEXT*    Host,
+    _In_    AML_PCI_SBDF_ADDRESS Address,
+    _In_    UINT64               Offset
+    )
 {
-	return 0xFFFFFFFFFFFFFFFF;
+    return 0xFFFFFFFFFFFFFFFF;
 }
 
 //
@@ -570,11 +570,11 @@ AmlHostPciConfigRead64(
 //
 VOID
 AmlHostPciConfigWrite8(
-	_Inout_ AML_HOST_CONTEXT*    Host,
-	_In_    AML_PCI_SBDF_ADDRESS Address,
-	_In_    UINT64               Offset,
-	_In_    UINT8                Value
-	)
+    _Inout_ AML_HOST_CONTEXT*    Host,
+    _In_    AML_PCI_SBDF_ADDRESS Address,
+    _In_    UINT64               Offset,
+    _In_    UINT8                Value
+    )
 {
 
 }
@@ -584,11 +584,11 @@ AmlHostPciConfigWrite8(
 //
 VOID
 AmlHostPciConfigWrite16(
-	_Inout_ AML_HOST_CONTEXT*    Host,
-	_In_    AML_PCI_SBDF_ADDRESS Address,
-	_In_    UINT64               Offset,
-	_In_    UINT16                Value
-	)
+    _Inout_ AML_HOST_CONTEXT*    Host,
+    _In_    AML_PCI_SBDF_ADDRESS Address,
+    _In_    UINT64               Offset,
+    _In_    UINT16                Value
+    )
 {
 
 }
@@ -598,11 +598,11 @@ AmlHostPciConfigWrite16(
 //
 VOID
 AmlHostPciConfigWrite32(
-	_Inout_ AML_HOST_CONTEXT*    Host,
-	_In_    AML_PCI_SBDF_ADDRESS Address,
-	_In_    UINT64               Offset,
-	_In_    UINT32               Value
-	)
+    _Inout_ AML_HOST_CONTEXT*    Host,
+    _In_    AML_PCI_SBDF_ADDRESS Address,
+    _In_    UINT64               Offset,
+    _In_    UINT32               Value
+    )
 {
 
 }
@@ -612,11 +612,11 @@ AmlHostPciConfigWrite32(
 //
 VOID
 AmlHostPciConfigWrite64(
-	_Inout_ AML_HOST_CONTEXT*    Host,
-	_In_    AML_PCI_SBDF_ADDRESS Address,
-	_In_    UINT64               Offset,
-	_In_    UINT64               Value
-	)
+    _Inout_ AML_HOST_CONTEXT*    Host,
+    _In_    AML_PCI_SBDF_ADDRESS Address,
+    _In_    UINT64               Offset,
+    _In_    UINT64               Value
+    )
 {
 
 }

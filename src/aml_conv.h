@@ -43,12 +43,12 @@ typedef UINT AML_CONV_FLAGS;
 _Success_( return )
 BOOLEAN
 AmlConvStringToBuffer(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Input,
-	_Inout_ AML_DATA*            Buffer,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Input,
+    _Inout_ AML_DATA*            Buffer,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Store a string to another existing string or empty object data.
@@ -56,12 +56,12 @@ AmlConvStringToBuffer(
 _Success_( return )
 BOOLEAN
 AmlConvStringToString(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Input,
-	_Inout_ AML_DATA*            Output,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Input,
+    _Inout_ AML_DATA*            Output,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Attempts to convert a string to a field unit.
@@ -69,12 +69,12 @@ AmlConvStringToString(
 _Success_( return )
 BOOLEAN
 AmlConvStringToFieldUnit(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Input,
-	_Inout_ AML_DATA*            Output,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Input,
+    _Inout_ AML_DATA*            Output,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Convert string to integer.
@@ -89,12 +89,12 @@ AmlConvStringToFieldUnit(
 _Success_( return )
 BOOLEAN
 AmlConvStringToInteger(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      String,
-	_Inout_ AML_DATA*            Integer,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      String,
+    _Inout_ AML_DATA*            Integer,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Convert integer to buffer.
@@ -106,12 +106,12 @@ AmlConvStringToInteger(
 _Success_( return )
 BOOLEAN
 AmlConvIntegerToBuffer(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Integer,
-	_Inout_ AML_DATA*            Buffer,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Integer,
+    _Inout_ AML_DATA*            Buffer,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Convert integer to field unit (buffer field or op-region field).
@@ -119,11 +119,11 @@ AmlConvIntegerToBuffer(
 _Success_( return )
 BOOLEAN
 AmlConvIntegerToFieldUnit(
-	_Inout_ struct _AML_STATE*   State,
-	_In_    const AML_DATA*      Input,
-	_Inout_ AML_DATA*            Output,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _In_    const AML_DATA*      Input,
+    _Inout_ AML_DATA*            Output,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Convert integer to string.
@@ -135,12 +135,12 @@ AmlConvIntegerToFieldUnit(
 _Success_( return )
 BOOLEAN
 AmlConvIntegerToString(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Integer,
-	_Inout_ AML_DATA*            String,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Integer,
+    _Inout_ AML_DATA*            String,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Convert buffer to integer.
@@ -155,12 +155,12 @@ AmlConvIntegerToString(
 _Success_( return )
 BOOLEAN
 AmlConvBufferToInteger(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Buffer,
-	_Inout_ AML_DATA*            Integer,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Buffer,
+    _Inout_ AML_DATA*            Integer,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Convert from buffer to string.
@@ -172,12 +172,12 @@ AmlConvBufferToInteger(
 _Success_( return )
 BOOLEAN
 AmlConvBufferToString(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Buffer,
-	_Inout_ AML_DATA*            String,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Buffer,
+    _Inout_ AML_DATA*            String,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Attempts to convert from a buffer to an empty object or another existing buffer.
@@ -185,12 +185,12 @@ AmlConvBufferToString(
 _Success_( return )
 BOOLEAN
 AmlConvBufferToBuffer(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Input,
-	_Inout_ AML_DATA*            Output,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Input,
+    _Inout_ AML_DATA*            Output,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Attempts to convert from a buffer to a field unit.
@@ -198,12 +198,12 @@ AmlConvBufferToBuffer(
 _Success_( return )
 BOOLEAN
 AmlConvBufferToFieldUnit(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Input,
-	_Inout_ AML_DATA*            Output,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Input,
+    _Inout_ AML_DATA*            Output,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Attempts to store an integer to the given output object using the implicit store conversion rules.
@@ -211,12 +211,12 @@ AmlConvBufferToFieldUnit(
 _Success_( return )
 BOOLEAN
 AmlConvIntegerStore(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Input,
-	_Inout_ AML_DATA*            Output,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Input,
+    _Inout_ AML_DATA*            Output,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Attempts to store a buffer to the given output object using the implicit store conversion rules.
@@ -224,12 +224,12 @@ AmlConvIntegerStore(
 _Success_( return )
 BOOLEAN
 AmlConvBufferStore(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Input,
-	_Inout_ AML_DATA*            Output,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Input,
+    _Inout_ AML_DATA*            Output,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Attempts to store a string to the given output object using the implicit store conversion rules.
@@ -237,12 +237,12 @@ AmlConvBufferStore(
 _Success_( return )
 BOOLEAN
 AmlConvStringStore(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Input,
-	_Inout_ AML_DATA*            Output,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Input,
+    _Inout_ AML_DATA*            Output,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Attempt to store from one object data value to another, performs the implicit store conversions.
@@ -250,12 +250,12 @@ AmlConvStringStore(
 _Success_( return )
 BOOLEAN
 AmlConvObjectStore(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_In_    const AML_DATA*      Input,
-	_Inout_ AML_DATA*            Output,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _In_    const AML_DATA*      Input,
+    _Inout_ AML_DATA*            Output,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );
 
 //
 // Convert an object in-place to the given conversion type (convert, free old value, update with converted value).
@@ -264,9 +264,9 @@ AmlConvObjectStore(
 _Success_( return )
 BOOLEAN
 AmlConvObjectInPlace(
-	_Inout_ struct _AML_STATE*   State,
-	_Inout_ AML_HEAP*            Heap,
-	_Inout_ AML_DATA*            Data,
-	_In_    AML_DATA_TYPE        ConversionType,
-	_In_    const AML_CONV_FLAGS ConvFlags
-	);
+    _Inout_ struct _AML_STATE*   State,
+    _Inout_ AML_HEAP*            Heap,
+    _Inout_ AML_DATA*            Data,
+    _In_    AML_DATA_TYPE        ConversionType,
+    _In_    const AML_CONV_FLAGS ConvFlags
+    );

@@ -164,35 +164,35 @@
 #define AML_OPCODE_ID_NAME_CHAR_ALPHA_FIRST	      ( ( UINT16 )AML_L1_NAME_CHAR_ALPHA_FIRST	)
 #define AML_OPCODE_ID_NAME_CHAR_ALPHA_LAST		  ( ( UINT16 )AML_L1_NAME_CHAR_ALPHA_LAST	)
 #define AML_OPCODE_ID_EXT_OP_PREFIX			      ( ( UINT16 )AML_L1_EXT_OP_PREFIX			)
-	#define AML_OPCODE_ID_MUTEX_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x01 << 8 ) ) /* MutexOp       */
-	#define AML_OPCODE_ID_EVENT_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x02 << 8 ) ) /* EventOp       */
-	#define AML_OPCODE_ID_COND_REF_OF_OP	      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x12 << 8 ) ) /* CondRefOfOp   */
-	#define AML_OPCODE_ID_CREATE_FIELD_OP	      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x13 << 8 ) ) /* CreateFieldOp */
-	#define AML_OPCODE_ID_LOAD_TABLE_OP	          ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x1F << 8 ) ) /* LoadTableOp   */
-	#define AML_OPCODE_ID_LOAD_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x20 << 8 ) ) /* LoadOp        */
-	#define AML_OPCODE_ID_STALL_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x21 << 8 ) ) /* StallOp       */
-	#define AML_OPCODE_ID_SLEEP_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x22 << 8 ) ) /* SleepOp       */
-	#define AML_OPCODE_ID_ACQUIRE_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x23 << 8 ) ) /* AcquireOp     */
-	#define AML_OPCODE_ID_SIGNAL_OP		          ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x24 << 8 ) ) /* SignalOp      */
-	#define AML_OPCODE_ID_WAIT_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x25 << 8 ) ) /* WaitOp        */
-	#define AML_OPCODE_ID_RESET_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x26 << 8 ) ) /* ResetOp       */
-	#define AML_OPCODE_ID_RELEASE_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x27 << 8 ) ) /* ReleaseOp     */
-	#define AML_OPCODE_ID_FROM_BCD_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x28 << 8 ) ) /* FromBCDOp     */
-	#define AML_OPCODE_ID_TO_BCD			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x29 << 8 ) ) /* ToBCD         */
-	#define AML_OPCODE_ID_RESERVED			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x2A << 8 ) ) /* Reserved      */
-	#define AML_OPCODE_ID_REVISION_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x30 << 8 ) ) /* RevisionOp    */
-	#define AML_OPCODE_ID_DEBUG_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x31 << 8 ) ) /* DebugOp       */
-	#define AML_OPCODE_ID_FATAL_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x32 << 8 ) ) /* FatalOp       */
-	#define AML_OPCODE_ID_TIMER_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x33 << 8 ) ) /* TimerOp       */
-	#define AML_OPCODE_ID_OP_REGION_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x80 << 8 ) ) /* OpRegionOp    */
-	#define AML_OPCODE_ID_FIELD_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x81 << 8 ) ) /* FieldOp       */
-	#define AML_OPCODE_ID_DEVICE_OP		          ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x82 << 8 ) ) /* DeviceOp      */
-	#define AML_OPCODE_ID_PROCESSOR_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x83 << 8 ) ) /* ProcessorOp   */
-	#define AML_OPCODE_ID_POWER_RES_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x84 << 8 ) ) /* PowerResOp    */
-	#define AML_OPCODE_ID_THERMAL_ZONE_OP	      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x85 << 8 ) ) /* ThermalZoneOp */
-	#define AML_OPCODE_ID_INDEX_FIELD_OP	      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x86 << 8 ) ) /* IndexFieldOp  */
-	#define AML_OPCODE_ID_BANK_FIELD_OP	          ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x87 << 8 ) ) /* BankFieldOp   */
-	#define AML_OPCODE_ID_DATA_REGION_OP	      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x88 << 8 ) ) /* DataRegionOp  */
+    #define AML_OPCODE_ID_MUTEX_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x01 << 8 ) ) /* MutexOp       */
+    #define AML_OPCODE_ID_EVENT_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x02 << 8 ) ) /* EventOp       */
+    #define AML_OPCODE_ID_COND_REF_OF_OP	      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x12 << 8 ) ) /* CondRefOfOp   */
+    #define AML_OPCODE_ID_CREATE_FIELD_OP	      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x13 << 8 ) ) /* CreateFieldOp */
+    #define AML_OPCODE_ID_LOAD_TABLE_OP	          ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x1F << 8 ) ) /* LoadTableOp   */
+    #define AML_OPCODE_ID_LOAD_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x20 << 8 ) ) /* LoadOp        */
+    #define AML_OPCODE_ID_STALL_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x21 << 8 ) ) /* StallOp       */
+    #define AML_OPCODE_ID_SLEEP_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x22 << 8 ) ) /* SleepOp       */
+    #define AML_OPCODE_ID_ACQUIRE_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x23 << 8 ) ) /* AcquireOp     */
+    #define AML_OPCODE_ID_SIGNAL_OP		          ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x24 << 8 ) ) /* SignalOp      */
+    #define AML_OPCODE_ID_WAIT_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x25 << 8 ) ) /* WaitOp        */
+    #define AML_OPCODE_ID_RESET_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x26 << 8 ) ) /* ResetOp       */
+    #define AML_OPCODE_ID_RELEASE_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x27 << 8 ) ) /* ReleaseOp     */
+    #define AML_OPCODE_ID_FROM_BCD_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x28 << 8 ) ) /* FromBCDOp     */
+    #define AML_OPCODE_ID_TO_BCD			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x29 << 8 ) ) /* ToBCD         */
+    #define AML_OPCODE_ID_RESERVED			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x2A << 8 ) ) /* Reserved      */
+    #define AML_OPCODE_ID_REVISION_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x30 << 8 ) ) /* RevisionOp    */
+    #define AML_OPCODE_ID_DEBUG_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x31 << 8 ) ) /* DebugOp       */
+    #define AML_OPCODE_ID_FATAL_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x32 << 8 ) ) /* FatalOp       */
+    #define AML_OPCODE_ID_TIMER_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x33 << 8 ) ) /* TimerOp       */
+    #define AML_OPCODE_ID_OP_REGION_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x80 << 8 ) ) /* OpRegionOp    */
+    #define AML_OPCODE_ID_FIELD_OP			      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x81 << 8 ) ) /* FieldOp       */
+    #define AML_OPCODE_ID_DEVICE_OP		          ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x82 << 8 ) ) /* DeviceOp      */
+    #define AML_OPCODE_ID_PROCESSOR_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x83 << 8 ) ) /* ProcessorOp   */
+    #define AML_OPCODE_ID_POWER_RES_OP		      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x84 << 8 ) ) /* PowerResOp    */
+    #define AML_OPCODE_ID_THERMAL_ZONE_OP	      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x85 << 8 ) ) /* ThermalZoneOp */
+    #define AML_OPCODE_ID_INDEX_FIELD_OP	      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x86 << 8 ) ) /* IndexFieldOp  */
+    #define AML_OPCODE_ID_BANK_FIELD_OP	          ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x87 << 8 ) ) /* BankFieldOp   */
+    #define AML_OPCODE_ID_DATA_REGION_OP	      ( AML_OPCODE_ID_EXT_OP_PREFIX | ( ( UINT16 )0x88 << 8 ) ) /* DataRegionOp  */
 #define AML_OPCODE_ID_ROOT_CHAR				      ( ( UINT16 )AML_L1_ROOT_CHAR				)
 #define AML_OPCODE_ID_PARENT_PREFIX_CHAR		  ( ( UINT16 )AML_L1_PARENT_PREFIX_CHAR		)
 #define AML_OPCODE_ID_NAME_CHAR_UNDERSCORE		  ( ( UINT16 )AML_L1_NAME_CHAR_UNDERSCORE	)
@@ -246,9 +246,9 @@
 #define AML_OPCODE_ID_LAND_OP					  ( ( UINT16 )AML_L1_LAND_OP				)
 #define AML_OPCODE_ID_LOR_OP					  ( ( UINT16 )AML_L1_LOR_OP					)
 #define AML_OPCODE_ID_LNOT_OP					  ( ( UINT16 )AML_L1_LNOT_OP				)
-	#define AML_OPCODE_ID_LNOT_EQUAL_OP           ( AML_OPCODE_ID_LNOT_OP | ( ( UINT16 )0x93 << 8 ) ) /* LNotEqualOp    */
-	#define AML_OPCODE_ID_LLESS_EQUAL_OP          ( AML_OPCODE_ID_LNOT_OP | ( ( UINT16 )0x94 << 8 ) ) /* LLessEqualOp   */
-	#define AML_OPCODE_ID_LGREATER_EQUAL_OP       ( AML_OPCODE_ID_LNOT_OP | ( ( UINT16 )0x95 << 8 ) ) /* LGreaterEqualO */
+    #define AML_OPCODE_ID_LNOT_EQUAL_OP           ( AML_OPCODE_ID_LNOT_OP | ( ( UINT16 )0x93 << 8 ) ) /* LNotEqualOp    */
+    #define AML_OPCODE_ID_LLESS_EQUAL_OP          ( AML_OPCODE_ID_LNOT_OP | ( ( UINT16 )0x94 << 8 ) ) /* LLessEqualOp   */
+    #define AML_OPCODE_ID_LGREATER_EQUAL_OP       ( AML_OPCODE_ID_LNOT_OP | ( ( UINT16 )0x95 << 8 ) ) /* LGreaterEqualO */
 #define AML_OPCODE_ID_LEQUAL_OP				      ( ( UINT16 )AML_L1_LEQUAL_OP				)
 #define AML_OPCODE_ID_LGREATER_OP				  ( ( UINT16 )AML_L1_LGREATER_OP			)
 #define AML_OPCODE_ID_LLESS_OP				      ( ( UINT16 )AML_L1_LLESS_OP				)
@@ -314,15 +314,15 @@
 // AML instruction opcode table entry.
 //
 typedef struct _AML_OPCODE_TABLE_ENTRY {
-	UINT8 IsValid : 1;
-	UINT8 IsExpressionOp : 1;
-	UINT8 OpcodeByte;
-	UINT8 EncodingGroup;
-	UINT8 SubTableIndex;
-	UINT8 FixedListArgTableOffset;
-	UINT8 FixedListArgCount;
-	UINT8 VariableListArgTableOffset;
-	UINT8 VariableListArgCount;
+    UINT8 IsValid : 1;
+    UINT8 IsExpressionOp : 1;
+    UINT8 OpcodeByte;
+    UINT8 EncodingGroup;
+    UINT8 SubTableIndex;
+    UINT8 FixedListArgTableOffset;
+    UINT8 FixedListArgCount;
+    UINT8 VariableListArgTableOffset;
+    UINT8 VariableListArgCount;
 } AML_OPCODE_TABLE_ENTRY;
 
 //
@@ -330,8 +330,8 @@ typedef struct _AML_OPCODE_TABLE_ENTRY {
 // contains information about the subtable, and an actual pointer to the subtable's entries.
 //
 typedef struct _AML_OPCODE_SUBTABLE_LIST_ENTRY {
-	BOOLEAN                       IsValid;
-	BOOLEAN                       IsOptionalMatch;
-	UINT8                         OpcodeByteL1;
-	const AML_OPCODE_TABLE_ENTRY* Entries;
+    BOOLEAN                       IsValid;
+    BOOLEAN                       IsOptionalMatch;
+    UINT8                         OpcodeByteL1;
+    const AML_OPCODE_TABLE_ENTRY* Entries;
 } AML_OPCODE_SUBTABLE_LIST_ENTRY;

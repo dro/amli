@@ -8,10 +8,10 @@
 _Success_( return )
 BOOLEAN
 AmlEvalRefOf(
-	_Inout_  AML_STATE*   State,
-	_In_     BOOLEAN      ConsumeOpcode,
-	_Outptr_ AML_OBJECT** ppObject
-	);
+    _Inout_  AML_STATE*   State,
+    _In_     BOOLEAN      ConsumeOpcode,
+    _Outptr_ AML_OBJECT** ppObject
+    );
 
 //
 // Evaluate DerefOf instruction to an object.
@@ -21,10 +21,10 @@ AmlEvalRefOf(
 _Success_( return )
 BOOLEAN
 AmlEvalDerefOf(
-	_Inout_  AML_STATE*   State,
-	_In_     BOOLEAN      ConsumeOpcode,
-	_Outptr_ AML_OBJECT** ppObject
-	);
+    _Inout_  AML_STATE*   State,
+    _In_     BOOLEAN      ConsumeOpcode,
+    _Outptr_ AML_OBJECT** ppObject
+    );
 
 //
 // Evaluate IndexOp.
@@ -37,10 +37,10 @@ AmlEvalDerefOf(
 _Success_( return )
 BOOLEAN
 AmlEvalIndex(
-	_Inout_  AML_STATE*   State,
-	_In_     BOOLEAN      ConsumeOpcode,
-	_Outptr_ AML_OBJECT** ppObject
-	);
+    _Inout_  AML_STATE*   State,
+    _In_     BOOLEAN      ConsumeOpcode,
+    _Outptr_ AML_OBJECT** ppObject
+    );
 
 //
 // MethodInvocation := NameString TermArgList
@@ -50,7 +50,7 @@ AmlEvalIndex(
 _Success_( return )
 BOOLEAN
 AmlEvalReferenceTypeOpcode(
-	_Inout_  AML_STATE*   State,
-	_In_     UINT         SearchFlags,
-	_Outptr_ AML_OBJECT** ppObject
-	);
+    _Inout_  AML_STATE*   State,
+    _In_     UINT         SearchFlags,
+    _Outptr_ AML_OBJECT** ppObject
+    );
