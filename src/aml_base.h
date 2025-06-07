@@ -11,30 +11,30 @@
 _Success_( return )
 BOOLEAN
 AmlCopyBits(
-	_In_reads_bytes_( InputDataSize )   const VOID* InputData,
-	_In_                                SIZE_T      InputDataSize,
-	_Inout_bytecount_( ResultDataSize ) VOID*       ResultData,
-	_In_                                SIZE_T      ResultDataSize,
-	_In_                                SIZE_T      InputBitIndex,
-	_In_                                SIZE_T      InputBitCount,
-	_In_                                SIZE_T      OutputBitIndex
-	);
+    _In_reads_bytes_( InputDataSize )   const VOID* InputData,
+    _In_                                SIZE_T      InputDataSize,
+    _Inout_bytecount_( ResultDataSize ) VOID*       ResultData,
+    _In_                                SIZE_T      ResultDataSize,
+    _In_                                SIZE_T      InputBitIndex,
+    _In_                                SIZE_T      InputBitCount,
+    _In_                                SIZE_T      OutputBitIndex
+    );
 
 //
 // Convert a decimal number to a 4-bit digit BCD encoded value.
 //
 UINT64
 AmlDecimalToBcd(
-	_In_ UINT64 Input
-	);
+    _In_ UINT64 Input
+    );
 
 //
 // Convert a 4-bit digit BCD encoded value to decimal.
 //
 UINT64
 AmlBcdToDecimal(
-	_In_ UINT64 Input
-	);
+    _In_ UINT64 Input
+    );
 
 //
 // Performs no validation of the input string other than the length, is assumed to be a valid EISAID string
@@ -44,9 +44,9 @@ AmlBcdToDecimal(
 _Success_( return != 0 )
 UINT32
 AmlStringToEisaId(
-	_In_count_( Length ) const CHAR* String,
-	_In_                 SIZE_T      Length
-	);
+    _In_count_( Length ) const CHAR* String,
+    _In_                 SIZE_T      Length
+    );
 
 //
 // Performs no validation of the input string other than the length, is assumed to be a valid EISAID string
@@ -56,8 +56,8 @@ AmlStringToEisaId(
 _Success_( return != 0 )
 UINT32
 AmlStringZToEisaId(
-	_In_z_ const CHAR* String
-	);
+    _In_z_ const CHAR* String
+    );
 
 //
 // Convert a regular path string to a decoded AML_NAME_STRING.
@@ -65,11 +65,11 @@ AmlStringZToEisaId(
 _Success_( return )
 BOOLEAN
 AmlPathStringToNameString(
-	_Inout_                  AML_ARENA*       Arena,
-	_In_count_( PathLength ) const CHAR*      Path,
-	_In_                     SIZE_T           PathLength,
-	_Out_                    AML_NAME_STRING* NameString
-	);
+    _Inout_                  AML_ARENA*       Arena,
+    _In_count_( PathLength ) const CHAR*      Path,
+    _In_                     SIZE_T           PathLength,
+    _Out_                    AML_NAME_STRING* NameString
+    );
 
 //
 // Convert a regular null-terminated path string to a decoded AML_NAME_STRING.
@@ -77,7 +77,7 @@ AmlPathStringToNameString(
 _Success_( return )
 BOOLEAN
 AmlPathStringZToNameString(
-	_Inout_ AML_ARENA*       Arena,
-	_In_z_  const CHAR*      Path,
-	_Out_   AML_NAME_STRING* NameString
-	);
+    _Inout_ AML_ARENA*       Arena,
+    _In_z_  const CHAR*      Path,
+    _Out_   AML_NAME_STRING* NameString
+    );

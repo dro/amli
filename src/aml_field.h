@@ -8,13 +8,13 @@
 _Success_( return )
 BOOLEAN
 AmlFieldUnitRead(
-	_Inout_                              struct _AML_STATE*  State,
-	_Inout_                              struct _AML_OBJECT* FieldObject,
-	_Out_writes_bytes_( ResultDataSize ) VOID*               ResultData,
-	_In_                                 SIZE_T              ResultDataSize,
-	_In_                                 BOOLEAN             AllowTruncation,
-	_Out_opt_                            SIZE_T*             pResultBitCount
-	);
+    _Inout_                              struct _AML_STATE*  State,
+    _Inout_                              struct _AML_OBJECT* FieldObject,
+    _Out_writes_bytes_( ResultDataSize ) VOID*               ResultData,
+    _In_                                 SIZE_T              ResultDataSize,
+    _In_                                 BOOLEAN             AllowTruncation,
+    _Out_opt_                            SIZE_T*             pResultBitCount
+    );
 
 //
 // Write data to a field unit object (field, buffer field, index field, bank field).
@@ -25,9 +25,9 @@ AmlFieldUnitRead(
 _Success_( return )
 BOOLEAN
 AmlFieldUnitWrite(
-	_Inout_                           struct _AML_STATE*  State,
-	_Inout_                           struct _AML_OBJECT* FieldObject,
-	_In_reads_bytes_( InputDataSize ) const VOID*         InputData,
-	_In_                              SIZE_T              InputDataSize,
-	_In_                              BOOLEAN             AllowTruncation
-	);
+    _Inout_                           struct _AML_STATE*  State,
+    _Inout_                           struct _AML_OBJECT* FieldObject,
+    _In_reads_bytes_( InputDataSize ) const VOID*         InputData,
+    _In_                              SIZE_T              InputDataSize,
+    _In_                              BOOLEAN             AllowTruncation
+    );

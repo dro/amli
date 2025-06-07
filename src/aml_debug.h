@@ -60,52 +60,52 @@
 //
 VOID
 AmlDebugPrint(
-	_In_   const struct _AML_STATE* State,
-	_In_   INT                      LogLevel,
-	_In_z_ const CHAR*              Format,
-	...
-	);
+    _In_   const struct _AML_STATE* State,
+    _In_   INT                      LogLevel,
+    _In_z_ const CHAR*              Format,
+    ...
+    );
 
 //
 // Debug print the value of an AML_DATA.
 //
 VOID
 AmlDebugPrintDataValue(
-	_In_ const struct _AML_STATE* State,
-	_In_ INT                      LogLevel,
-	_In_ const AML_DATA*          Value
-	);
+    _In_ const struct _AML_STATE* State,
+    _In_ INT                      LogLevel,
+    _In_ const AML_DATA*          Value
+    );
 
 //
 // Debug print an AML name string.
 //
 VOID
 AmlDebugPrintNameString(
-	_In_ const struct _AML_STATE*       State,
-	_In_ INT                            LogLevel,
-	_In_ const struct _AML_NAME_STRING* NameString
-	);
+    _In_ const struct _AML_STATE*       State,
+    _In_ INT                            LogLevel,
+    _In_ const struct _AML_NAME_STRING* NameString
+    );
 
 //
 // Debug print an AML object's name (if any known).
 //
 VOID
 AmlDebugPrintObjectName(
-	_In_ const struct _AML_STATE*  State,
-	_In_ INT                       LogLevel,
-	_In_ const struct _AML_OBJECT* Object
-	);
+    _In_ const struct _AML_STATE*  State,
+    _In_ INT                       LogLevel,
+    _In_ const struct _AML_OBJECT* Object
+    );
 
 //
 // Debug print a binary arithmetic instruction.
 //
 VOID
 AmlDebugPrintArithmetic(
-	_In_ const struct _AML_STATE*  State,
-	_In_ INT                       LogLevel,
-	_In_ const CHAR*               OperatorSymbol,
-	_In_ const struct _AML_OBJECT* Target,
-	_In_ AML_DATA                  Operand1,
-	_In_ AML_DATA                  Operand2,
-	_In_ AML_DATA                  Result
-	);
+    _In_ const struct _AML_STATE*  State,
+    _In_ INT                       LogLevel,
+    _In_ const CHAR*               OperatorSymbol,
+    _In_ const struct _AML_OBJECT* Target,
+    _In_ AML_DATA                  Operand1,
+    _In_ AML_DATA                  Operand2,
+    _In_ AML_DATA                  Result
+    );

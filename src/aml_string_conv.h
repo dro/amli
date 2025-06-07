@@ -18,9 +18,9 @@
 //
 UINT64
 AmlStringConvParseIntegerU64(
-	_In_count_( StringLength ) const CHAR* String,
-	_In_                       SIZE_T      StringLength,
-	_In_                       INT         NumberRadix,
-	_In_                       UINT        Flags,
-	_Out_opt_                  SIZE_T*     pNumberLength
-	);
+    _In_count_( StringLength ) const CHAR* String,
+    _In_                       SIZE_T      StringLength,
+    _In_                       INT         NumberRadix,
+    _In_                       UINT        Flags,
+    _Out_opt_                  SIZE_T*     pNumberLength
+    );

@@ -19,40 +19,40 @@
 // Arena snapshot state.
 //
 typedef struct _AML_ARENA_SNAPSHOT {
-	UINT64                   Index;
-	SIZE_T                   ChunkUsedSize;
-	struct _AML_ARENA_CHUNK* Chunk;
+    UINT64                   Index;
+    SIZE_T                   ChunkUsedSize;
+    struct _AML_ARENA_CHUNK* Chunk;
 } AML_ARENA_SNAPSHOT;
 
 //
 // Arena doubly linked chunk list.
 //
 typedef struct _AML_ARENA_CHUNK_LIST {
-	struct _AML_ARENA_CHUNK* First;
-	struct _AML_ARENA_CHUNK* Last;
+    struct _AML_ARENA_CHUNK* First;
+    struct _AML_ARENA_CHUNK* Last;
 } AML_ARENA_CHUNK_LIST;
 
 //
 // Chunk freelist arena allocator.
 //
 typedef struct _AML_ARENA {
-	//
-	// The backend allocator used to allocate arena chunks.
-	//
-	AML_ALLOCATOR Backend;
+    //
+    // The backend allocator used to allocate arena chunks.
+    //
+    AML_ALLOCATOR Backend;
 
-	//
-	// Chunk information/configuration.
-	//
-	SIZE_T                   BaseChunkSize;
-	AML_ARENA_CHUNK_LIST     ChunkList;
-	AML_ARENA_CHUNK_LIST     ChunkFreeList;
-	struct _AML_ARENA_CHUNK* CurrentChunk;
+    //
+    // Chunk information/configuration.
+    //
+    SIZE_T                   BaseChunkSize;
+    AML_ARENA_CHUNK_LIST     ChunkList;
+    AML_ARENA_CHUNK_LIST     ChunkFreeList;
+    struct _AML_ARENA_CHUNK* CurrentChunk;
 
-	//
-	// Snapshot stack state.
-	//
-	SIZE_T SnapshotCount;
+    //
+    // Snapshot stack state.
+    //
+    SIZE_T SnapshotCount;
 } AML_ARENA;
 
 #endif
@@ -62,11 +62,11 @@ typedef struct _AML_ARENA {
 //
 VOID
 AmlArenaInitialize(
-	_Out_ AML_ARENA*          Arena,
-	_In_  const AML_ALLOCATOR Backend,
-	_In_  SIZE_T              ChunkSize,
-	_In_  UINT32              Flags
-	);
+    _Out_ AML_ARENA*          Arena,
+    _In_  const AML_ALLOCATOR Backend,
+    _In_  SIZE_T              ChunkSize,
+    _In_  UINT32              Flags
+    );
 
 //
 // Allocate memory using the given arena.
@@ -74,9 +74,9 @@ AmlArenaInitialize(
 _Success_( return != NULL )
 VOID*
 AmlArenaAllocate(
-	_Inout_ AML_ARENA* Arena,
-	_In_    SIZE_T     DataSize
-	);
+    _Inout_ AML_ARENA* Arena,
+    _In_    SIZE_T     DataSize
+    );
 
 //
 // Allocate memory using the given arena and zero initialize it.
@@ -84,9 +84,9 @@ AmlArenaAllocate(
 _Success_( return != NULL )
 VOID*
 AmlArenaAllocateZeroInitialized(
-	_Inout_ AML_ARENA* Arena,
-	_In_    SIZE_T     DataSize
-	);
+    _Inout_ AML_ARENA* Arena,
+    _In_    SIZE_T     DataSize
+    );
 
 //
 // Allocate memory using the given arena, and copy the contents of the input buffer to it.
@@ -94,10 +94,10 @@ AmlArenaAllocateZeroInitialized(
 _Success_( return != NULL )
 VOID*
 AmlArenaAllocateCopy(
-	_Inout_                      AML_ARENA*  Arena,
-	_In_reads_bytes_( DataSize ) const VOID* DataInput,
-	_In_                         SIZE_T      DataSize
-	);
+    _Inout_                      AML_ARENA*  Arena,
+    _In_reads_bytes_( DataSize ) const VOID* DataInput,
+    _In_                         SIZE_T      DataSize
+    );
 
 //
 // Reset used space of the arena allocator,
@@ -106,24 +106,24 @@ AmlArenaAllocateCopy(
 //
 VOID
 AmlArenaReset(
-	_Inout_ AML_ARENA* Arena
-	);
+    _Inout_ AML_ARENA* Arena
+    );
 
 //
 // Free all backing memory allocated by the arena.
 //
 VOID
 AmlArenaRelease(
-	_Inout_ AML_ARENA* Arena
-	);
+    _Inout_ AML_ARENA* Arena
+    );
 
 //
 // Take a snapshot of the current arena, must be committed or rolled back.
 //
 AML_ARENA_SNAPSHOT
 AmlArenaSnapshot(
-	_Inout_ AML_ARENA* Arena
-	);
+    _Inout_ AML_ARENA* Arena
+    );
 
 //
 // Rollback arena state to the given snapshot.
@@ -133,9 +133,9 @@ AmlArenaSnapshot(
 _Success_( return )
 BOOLEAN
 AmlArenaSnapshotRollback(
-	_Inout_ AML_ARENA*                Arena,
-	_In_    const AML_ARENA_SNAPSHOT* Snapshot
-	);
+    _Inout_ AML_ARENA*                Arena,
+    _In_    const AML_ARENA_SNAPSHOT* Snapshot
+    );
 
 //
 // Commit the current snapshot.
@@ -144,6 +144,6 @@ AmlArenaSnapshotRollback(
 _Success_( return )
 BOOLEAN
 AmlArenaSnapshotCommit(
-	_Inout_ AML_ARENA*                Arena,
-	_In_    const AML_ARENA_SNAPSHOT* Snapshot
-	);
+    _Inout_ AML_ARENA*                Arena,
+    _In_    const AML_ARENA_SNAPSHOT* Snapshot
+    );

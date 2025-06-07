@@ -10,16 +10,16 @@ AmlMemoryCopy(
     _In_                           SIZE_T      Size
     )
 {
-	SIZE_T i;
+    SIZE_T i;
 
-	//
-	// Naively copy byte-by-byte, shouldn't violate strict aliasing when using UCHAR.
-	//
-	for( i = 0; i < Size; i++ ) {
-		( ( UCHAR* )Destination )[ i ] = ( ( const UCHAR* )Source )[ i ];
-	}
+    //
+    // Naively copy byte-by-byte, shouldn't violate strict aliasing when using UCHAR.
+    //
+    for( i = 0; i < Size; i++ ) {
+        ( ( UCHAR* )Destination )[ i ] = ( ( const UCHAR* )Source )[ i ];
+    }
 
-	return Destination;
+    return Destination;
 }
 
 //
@@ -32,16 +32,16 @@ AmlMemorySet(
     _In_                           SIZE_T Size
     )
 {
-	SIZE_T i;
+    SIZE_T i;
 
-	//
-	// Naively set byte-by-byte, shouldn't violate strict aliasing when using UCHAR.
-	//
-	for( i = 0; i < Size; i++ ) {
-		( ( UCHAR* )Destination )[ i ] = ( UCHAR )Value;
-	}
+    //
+    // Naively set byte-by-byte, shouldn't violate strict aliasing when using UCHAR.
+    //
+    for( i = 0; i < Size; i++ ) {
+        ( ( UCHAR* )Destination )[ i ] = ( UCHAR )Value;
+    }
 
-	return Destination;
+    return Destination;
 }
 
 //
@@ -49,9 +49,9 @@ AmlMemorySet(
 //
 UINT32
 AmlRotateLeft32(
-	_In_ UINT32 Value,
-	_In_ UINT32 Shift
-	)
+    _In_ UINT32 Value,
+    _In_ UINT32 Shift
+    )
 {
-	return ( ( Value << Shift ) | ( Value >> ( 32 - Shift ) ) );
+    return ( ( Value << Shift ) | ( Value >> ( 32 - Shift ) ) );
 }

@@ -39,8 +39,8 @@
 // Supported OSI entry, will return successfully if queried by AML bytecode using _OSI(Name).
 //
 typedef struct _AML_OSI_ENTRY {
-	const CHAR* Name;
-	SIZE_T      NameLength;
+    const CHAR* Name;
+    SIZE_T      NameLength;
 } AML_OSI_ENTRY;
 
 //
@@ -49,9 +49,9 @@ typedef struct _AML_OSI_ENTRY {
 _Success_( return )
 BOOLEAN
 AmlOsiQueryNativeMethod(
-	_Inout_                        struct _AML_STATE* State,
-	_In_                           VOID*              UserContext,
-	_Inout_count_( ArgumentCount ) AML_DATA*          Arguments,
-	_In_                           SIZE_T             ArgumentCount,
-	_Inout_                        AML_DATA*          ReturnValue
-	);
+    _Inout_                        struct _AML_STATE* State,
+    _In_                           VOID*              UserContext,
+    _Inout_count_( ArgumentCount ) AML_DATA*          Arguments,
+    _In_                           SIZE_T             ArgumentCount,
+    _Inout_                        AML_DATA*          ReturnValue
+    );

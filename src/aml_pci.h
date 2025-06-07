@@ -33,8 +33,8 @@
 //
 VOID
 AmlPciInformationFree(
-	_Inout_ AML_PCI_INFORMATION* Info
-	);
+    _Inout_ AML_PCI_INFORMATION* Info
+    );
 
 //
 // Resolve the current address of a PCI device, taking into account any PCI bridge links.
@@ -42,7 +42,7 @@ AmlPciInformationFree(
 _Success_( return )
 BOOLEAN
 AmlPciResolveDeviceAddress(
-	_Inout_ AML_HOST_CONTEXT*     Host,
-	_Inout_ AML_PCI_INFORMATION*  Info,
-	_Out_   AML_PCI_SBDF_ADDRESS* Address
-	);
+    _Inout_ AML_HOST_CONTEXT*     Host,
+    _Inout_ AML_PCI_INFORMATION*  Info,
+    _Out_   AML_PCI_SBDF_ADDRESS* Address
+    );

@@ -4,5 +4,5 @@
 // User-provided host context type.
 //
 struct _AML_HOST_CONTEXT {
-	volatile LONG* GlobalLock;
+    volatile LONG* GlobalLock;
 };
