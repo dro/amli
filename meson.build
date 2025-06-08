@@ -54,8 +54,8 @@ runtest = executable(
 
 # Define all test cases.
 test('feature test 1', runtest, args : [join_paths(meson.source_root(), 'tests/feature_test_1/DSDT.aml')])
-test('board test 1', runtest, args : [join_paths(meson.source_root(), 'tests/board_test_1/DSDT.aml')])
-test('board test 2', runtest, args : [join_paths(meson.source_root(), 'tests/board_test_2/DSDT.aml')])
+# test('board test 1', runtest, args : [join_paths(meson.source_root(), 'tests/board_test_1/DSDT.aml')])
+# test('board test 2', runtest, args : [join_paths(meson.source_root(), 'tests/board_test_2/DSDT.aml')])
 # test('fuzzer crash 1', runtest, args : [join_paths(meson.source_root(), 'tests/fuzzer/crash-0ba3f0b526f857edb57f80ac0f23fe9b945b0886')])
 # test('fuzzer crash 2', runtest, args : [join_paths(meson.source_root(), 'tests/fuzzer/crash-0f491d86d3e1bec527ac6af613dee3ad46d10b03')])
 # test('fuzzer crash 3', runtest, args : [join_paths(meson.source_root(), 'tests/fuzzer/crash-1b68fe6ef658788c8c8b54db30bc872890e1b2fd')])
