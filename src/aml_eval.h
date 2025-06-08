@@ -2,6 +2,7 @@
 
 #include "aml_platform.h"
 #include "aml_decoder.h"
+#include "aml_pci.h"
 
 //
 // Default string used for _OS operating system name value.
@@ -335,9 +336,21 @@ AmlEvalNodePciInformation(
     );
 
 //
+// Attempt to parse and evaluate the CRS properties of a _PRT package entry.
+// The package passed to this function must be an entry subpackage of the _PRT package.
+//
+_Success_( return )
+BOOLEAN
+AmlEvalPciPrtEntry(
+    _Inout_ AML_STATE*              State,
+    _Out_   AML_PCI_PRT_ENTRY*      PrtEntry,
+    _In_    const AML_PACKAGE_DATA* Package
+    );
+
+//
 // Attempt to evaluate the _STA of the given device node.
 // If a device object does not have an _STA object then OSPM assumes that all of the above bits are set
-// (i.e., the device is present, enabled, shown in the UI, and functioning).
+// (i.e. the device is present, enabled, shown in the UI, and functioning).
 //
 _Success_( return )
 BOOLEAN

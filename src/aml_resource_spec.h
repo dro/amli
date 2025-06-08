@@ -79,23 +79,23 @@ typedef struct _AML_RESOURCE_IRQ_3 {
 #define AML_RESOURCE_IRQ_MODE_SHIFT 0 /* Bit [0] Interrupt Mode, _HE */
 #define AML_RESOURCE_IRQ_MODE_MASK  1
 #define AML_RESOURCE_IRQ_MODE(Info) (((Info) >> AML_RESOURCE_IRQ_MODE_SHIFT) & AML_RESOURCE_IRQ_MODE_MASK)
-    #define AML_RESOURCE_IRQ_MODE_LEVEL 0  /* Level-Triggered */
-    #define AML_RESOURCE_IRQ_MODE_EDGE  1  /* Edge-Triggered */
+    #define AML_RESOURCE_IRQ_MODE_LEVEL 0 /* Level-Triggered */
+    #define AML_RESOURCE_IRQ_MODE_EDGE  1 /* Edge-Triggered */
 #define AML_RESOURCE_IRQ_POLARITY_SHIFT 3 /* Bit [3] Interrupt Polarity, _LL */
 #define AML_RESOURCE_IRQ_POLARITY_MASK  1
 #define AML_RESOURCE_IRQ_POLARITY(Info) (((Info) >> AML_RESOURCE_IRQ_POLARITY_SHIFT) & AML_RESOURCE_IRQ_POLARITY_MASK)
-    #define AML_RESOURCE_IRQ_POLARITY_HIGH 0  /* Active-High */
-    #define AML_RESOURCE_IRQ_POLARITY_LOW  1  /* Active-Low */
+    #define AML_RESOURCE_IRQ_POLARITY_HIGH 0 /* Active-High */
+    #define AML_RESOURCE_IRQ_POLARITY_LOW  1 /* Active-Low */
 #define AML_RESOURCE_IRQ_SHARING_SHIFT 4 /* Bit [4] Interrupt Sharing, _SHR */
 #define AML_RESOURCE_IRQ_SHARING_MASK  1
 #define AML_RESOURCE_IRQ_SHARING(Info) (((Info) >> AML_RESOURCE_IRQ_SHARING_SHIFT) & AML_RESOURCE_IRQ_SHARING_MASK)
-    #define AML_RESOURCE_IRQ_EXCLUSIVE 0  /* Not shared with other devices */
-    #define AML_RESOURCE_IRQ_SHARED    1  /* Shared with other devices */
+    #define AML_RESOURCE_IRQ_EXCLUSIVE 0 /* Not shared with other devices */
+    #define AML_RESOURCE_IRQ_SHARED    1 /* Shared with other devices */
 #define AML_RESOURCE_IRQ_WAKE_SHIFT 5 /* Bit [5] Wake Capability, _WKC */
 #define AML_RESOURCE_IRQ_WAKE_MASK  1
 #define AML_RESOURCE_IRQ_WAKE(Info) (((Info) >> AML_RESOURCE_IRQ_WAKE_SHIFT) & AML_RESOURCE_IRQ_WAKE_MASK)
-    #define AML_RESOURCE_IRQ_NOT_WAKE_CAPABLE 0  /* Not capable of waking the system */
-    #define AML_RESOURCE_IRQ_WAKE_CAPABLE     1  /* Capable of waking the system */
+    #define AML_RESOURCE_IRQ_NOT_WAKE_CAPABLE 0 /* Not capable of waking the system */
+    #define AML_RESOURCE_IRQ_WAKE_CAPABLE     1 /* Capable of waking the system */
 
 //
 // DMA Descriptor.

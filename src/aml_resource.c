@@ -274,6 +274,9 @@ AmlResourceViewRead(
         }
         CopySize = AML_MIN( Size, sizeof( Resource->u.ExtendedInterrupt ) );
         AML_MEMCPY( &Resource->u.ExtendedInterrupt, &View->Data[ View->DataCursor ], CopySize );
+        if( ( ( Size - CopySize ) / sizeof( UINT32 ) ) < Resource->u.ExtendedInterrupt.InterruptTableLength ) {
+            return AML_FALSE;
+        }
         break;
     case AML_RESOURCE_TAG_PIN_FUNCTION:
         if( DataSize < AML_RESOURCE_MIN_LENGTH_PIN_FUNCTION ) {

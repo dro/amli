@@ -13,6 +13,7 @@
 #include "aml_device_id.h"
 #include "aml_method.h"
 #include "aml_base.h"
+#include "aml_resource.h"
 #include "aml_eval.h"
 #include "aml_eval_named.h"
 #include "aml_eval_expression.h"
@@ -2254,9 +2255,235 @@ AmlEvalNodePciInformation(
 }
 
 //
+// Attempt to parse source _CRS properties for a _PRT entry.
+//
+_Success_( return )
+static
+BOOLEAN
+AmlPciPrtParseInterruptLinkCrs(
+    _Inout_ AML_STATE*             State,
+    _In_    const AML_BUFFER_DATA* CrsBuffer,
+    _Inout_ AML_PCI_PRT_ENTRY*     PrtEntry
+    )
+{
+    AML_RESOURCE_VIEW ResourceView;
+    AML_RESOURCE      Resource;
+    UINT16            IrqMask;
+    UINT8             Info;
+    SIZE_T            i;
+    UINT32            GsiNumber;
+
+    //
+    // Attempt to parse the CRS Interrupt resource descriptor.
+    //
+    AmlResourceViewInitialize( &ResourceView, CrsBuffer->Data, CrsBuffer->Size );
+    for( i = 0; i <= PrtEntry->SourceIndex; i++ ) {
+        //
+        // Stop if we have reached the end of the resource buffer.
+        //
+        if( AmlResourceViewEnd( &ResourceView ) ) {
+            break;
+        }
+
+        //
+        // Parse the next resource descriptor in the buffer.
+        //
+        if( AmlResourceViewRead( &ResourceView, &Resource ) == AML_FALSE ) {
+            return AML_FALSE;
+        }
+
+        //
+        // If this isn't the resource descriptor referenced by the SourceIndex, skip it until we get there.
+        // The SourceIndex will typically always be 0.
+        //
+        if( i != PrtEntry->SourceIndex ) {
+            continue;
+        }
+
+        //
+        // If we have reached an IRQ resource descriptor, use the first one.
+        // Multiple Interrupt descriptors might be possible, but is not yet considered here.
+        //
+        if( ( Resource.u.Tag == AML_RESOURCE_TAG_IRQ_2 )
+            || ( Resource.u.Tag == AML_RESOURCE_TAG_IRQ_3 ) )
+        {
+            //
+            // Mask of legacy IRQs (0-15) supported or set by the resource.
+            // A CRS mask bit must always be set, otherwise there is no current setting.
+            //
+            IrqMask = ( Resource.u.Irq2.Mask0 | ( ( UINT16 )Resource.u.Irq2.Mask1 << 8 ) );
+            if( IrqMask == 0 ) {
+                return AML_FALSE;
+            }
+
+            //
+            // If byte 3 is not included, High true, edge sensitive, non-shareable is assumed.
+            //
+            if( Resource.u.Tag != AML_RESOURCE_TAG_IRQ_3 ) {
+                Info = ( ( AML_RESOURCE_IRQ_POLARITY_HIGH << AML_RESOURCE_IRQ_POLARITY_SHIFT )
+                         | ( AML_RESOURCE_IRQ_MODE_EDGE << AML_RESOURCE_IRQ_MODE_SHIFT )
+                         | ( AML_RESOURCE_IRQ_EXCLUSIVE << AML_RESOURCE_IRQ_SHARING_SHIFT ) );
+            } else {
+                Info = Resource.u.Irq3.Info;
+            }
+
+            //
+            // Scan for the first set bit of the IRQ mask.
+            // In theory there may be more than one value set, since it is a mask,
+            // not exactly sure what this would imply, just uses any set bit for now.
+            //
+            PrtEntry->CrsInfo          = Info;
+            PrtEntry->CrsIsEdge        = ( AML_RESOURCE_IRQ_MODE( Info ) == AML_RESOURCE_IRQ_MODE_EDGE );
+            PrtEntry->CrsIsPolarityLow = ( AML_RESOURCE_IRQ_POLARITY( Info ) == AML_RESOURCE_IRQ_POLARITY_LOW );
+            PrtEntry->CrsIsShared      = ( AML_RESOURCE_IRQ_SHARING( Info ) == AML_RESOURCE_IRQ_SHARED );
+            PrtEntry->CrsNumber        = ( UINT32 )AML_TZCNT64( IrqMask );
+            PrtEntry->CrsIsLegacyIrq   = AML_TRUE;
+            return AML_TRUE;
+        }
+
+        //
+        // If we have reached an extended interrupt descriptor, use the first one.
+        // An extended interrupt descriptor should refer directly to GSIs instead of legacy interrupts.
+        //
+        if( Resource.u.Tag == AML_RESOURCE_TAG_EXTENDED_INTERRUPT ) {
+            //
+            // Currently we always just use the first number in the current GSI list.
+            // Not exactly sure what multiple in the list would imply.
+            //
+            Info = Resource.u.ExtendedInterrupt.InterruptVectorFlags;
+            if( ( Resource.u.ExtendedInterrupt.InterruptTableLength <= 0 )
+                || ( Resource.VldSize < sizeof( GsiNumber ) ) )
+            {
+                return AML_FALSE;
+            }
+            AML_MEMCPY( &GsiNumber, &CrsBuffer->Data[ Resource.VldOffset ], sizeof( GsiNumber ) );
+
+            //
+            // Convert interrupt vector flags to generic internal format.
+            // This is done as the bitfields differ from those of the legacy IRQ resource.
+            //
+            PrtEntry->CrsInfo          = Info;
+            PrtEntry->CrsIsEdge        = ( AML_RESOURCE_EXTENDED_INTERRUPT_MODE( Info ) == AML_RESOURCE_EXTENDED_INTERRUPT_EDGE_TRIGGERED );
+            PrtEntry->CrsIsPolarityLow = ( AML_RESOURCE_EXTENDED_INTERRUPT_POLARITY( Info ) == AML_RESOURCE_EXTENDED_INTERRUPT_ACTIVE_LOW );
+            PrtEntry->CrsIsPolarityLow = ( AML_RESOURCE_EXTENDED_INTERRUPT_SHARING( Info ) == AML_RESOURCE_EXTENDED_INTERRUPT_SHARED );
+            PrtEntry->CrsNumber        = GsiNumber;
+            PrtEntry->CrsIsLegacyIrq   = AML_FALSE;
+            return AML_TRUE;
+        }
+    }
+
+    return AML_FALSE;
+}
+
+//
+// Attempt to parse and evaluate the CRS properties of a _PRT package entry.
+// The package passed to this function must be an entry subpackage of the _PRT package.
+//
+_Success_( return )
+BOOLEAN
+AmlEvalPciPrtEntry(
+    _Inout_ AML_STATE*              State,
+    _Out_   AML_PCI_PRT_ENTRY*      PrtEntry,
+    _In_    const AML_PACKAGE_DATA* Package
+    )
+{
+    AML_OBJECT*         SourceObject;
+    AML_NAMESPACE_NODE* SourceNode;
+    AML_DATA            ResourceBuf;
+    BOOLEAN             Success;
+
+    //
+    // Package elements:
+    //  Address     - Integer
+    //  Pin         - Integer
+    //  Source      - (Device|Integer)
+    //  SourceIndex - Integer
+    //
+    if( ( Package->ElementCount < 4 )
+        || ( Package->Elements[ 0 ]->Value.Type != AML_DATA_TYPE_INTEGER ) 
+        || ( Package->Elements[ 1 ]->Value.Type != AML_DATA_TYPE_INTEGER )
+        || ( Package->Elements[ 3 ]->Value.Type != AML_DATA_TYPE_INTEGER ) )
+    {
+        return AML_FALSE;
+    }
+
+    //
+    // Initialize the PRT entry.
+    //
+    *PrtEntry = ( AML_PCI_PRT_ENTRY ){
+        .Address     = ( UINT32 )Package->Elements[ 0 ]->Value.u.Integer,
+        .Pin         = ( UINT32 )Package->Elements[ 1 ]->Value.u.Integer,
+        .SourceIndex = ( UINT32 )Package->Elements[ 3 ]->Value.u.Integer,
+    };
+
+    //
+    // Handle an integer source field.
+    // If this field is the integer constant Zero (or a Byte value of 0),
+    // then the interrupt is allocated from the global interrupt pool,
+    // with the SourceIndex being the actual global system interrupt number
+    // to which the pin is connected.
+    //
+    if( Package->Elements[ 2 ]->Value.Type == AML_DATA_TYPE_INTEGER ) {
+        //
+        // If the Source field is the Byte value zero,
+        // then the SourceIndex is the global system interrupt number to which the pin is connected,
+        //
+        if( Package->Elements[ 2 ]->Value.u.Integer != 0 ) {
+            return AML_FALSE;
+        }
+
+        //
+        // Use the SourceIndex as the GSI number and assume the default information used in the IRQ case,
+        // high true, edge sensitive, non-shareable.
+        //
+        PrtEntry->CrsIsPolarityLow = AML_FALSE;
+        PrtEntry->CrsIsEdge        = AML_TRUE;
+        PrtEntry->CrsIsShared      = AML_FALSE;
+        PrtEntry->CrsNumber        = PrtEntry->SourceIndex;
+        PrtEntry->CrsIsLegacyIrq   = AML_FALSE;
+        return AML_TRUE;
+    }
+
+    //
+    // The source field was not an integer value of zero, meaning it must be a reference to a device.
+    //
+    if( ( Package->Elements[ 2 ]->Value.Type != AML_DATA_TYPE_REFERENCE )
+        || ( Package->Elements[ 2 ]->Value.u.Reference.Object == NULL ) 
+        || ( Package->Elements[ 2 ]->Value.u.Reference.Object->Type != AML_OBJECT_TYPE_DEVICE )
+        || ( Package->Elements[ 2 ]->Value.u.Reference.Object->NamespaceNode == NULL ) )
+    {
+        return AML_FALSE;
+    }
+
+    //
+    // The referenced device should typically be a PCI link device,
+    // but this isn't mandated by the spec. Just assume that the device
+    // can handle interrupts and supports _CRS/_PRS.
+    //
+    SourceObject = Package->Elements[ 2 ]->Value.u.Reference.Object;
+    SourceNode = SourceObject->NamespaceNode;
+
+    //
+    // Attempt to evaluate and parse the device's _CRS, it should contain an list of
+    // interrupt resources containing a mask of the current IRQs. Typically there should
+    // only be a single bit set.
+    //
+    if( AmlEvalNodeChildZ( State, SourceNode, "_CRS", AML_DATA_TYPE_BUFFER, AML_FALSE, AML_FALSE, &ResourceBuf ) == AML_FALSE ) {
+        return AML_FALSE;
+    }
+    Success = AmlPciPrtParseInterruptLinkCrs( State, ResourceBuf.u.Buffer, PrtEntry );
+    AmlDataFree( &ResourceBuf );
+    if( Success == AML_FALSE ) {
+        return AML_FALSE;
+    }
+
+    return AML_TRUE;
+}
+
+//
 // Attempt to evaluate the _STA of the given device node.
 // If a device object does not have an _STA object then OSPM assumes that all of the above bits are set
-// (i.e., the device is present, enabled, shown in the UI, and functioning).
+// (i.e. the device is present, enabled, shown in the UI, and functioning).
 //
 _Success_( return )
 BOOLEAN
