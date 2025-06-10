@@ -920,7 +920,7 @@ AmlFindSetRightBit(
     //
     // Count trailing (from lsb) zero bits.
     //
-    TzCount = AML_TZCNT64( Value );
+    TzCount = ( AML_TZCNT64( Value ) + 1 );
 
     //
     // Create a mask of all bits set if the value is non-zero, otherwise, a mask of zero.

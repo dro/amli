@@ -41,7 +41,6 @@ AmlCompareInteger(
 
     //
     // Get both integer operand values (masked to the revision's integer size).
-    // TODO: Shouldn't need to mask them, as they should both be properly sign-extended.
     //
     IntegerSizeMask = ( State->IsIntegerSize64 ? UINT64_MAX : UINT32_MAX );
     Value1 = ( Operand1->u.Integer & IntegerSizeMask );
