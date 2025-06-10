@@ -949,7 +949,8 @@ AmlEvalBinaryIntegerArithmeticArguments(
     _Inout_  AML_STATE*   State,
     _Out_    AML_DATA*    Operand1,
     _Out_    AML_DATA*    Operand2,
-    _Outptr_ AML_OBJECT** ppTarget
+    _Outptr_ AML_OBJECT** ppTarget,
+    _In_     BOOLEAN      SignExtend
     )
 {
     //
@@ -963,6 +964,20 @@ AmlEvalBinaryIntegerArithmeticArguments(
     } else if( AmlEvalTarget( State, 0, ppTarget ) == AML_FALSE ) {
         return AML_FALSE;
     }
+
+    //
+    // Certain arithmetic instructions require sign extension for 32-bit AML code.
+    //
+    if( State->IsIntegerSize64 == AML_FALSE ) {
+        if( SignExtend ) {
+            Operand1->u.Integer = AmlDecoderSignExtendInteger( State, Operand1->u.Integer );
+            Operand2->u.Integer = AmlDecoderSignExtendInteger( State, Operand2->u.Integer );
+        } else {
+            Operand1->u.Integer = ( Operand1->u.Integer & UINT32_MAX );
+            Operand2->u.Integer = ( Operand2->u.Integer & UINT32_MAX );
+        }
+    }
+
     return AML_TRUE;
 }
 
@@ -2293,6 +2308,14 @@ AmlEvalExpressionOpcode(
         }
 
         //
+        // Certain arithmetic instructions require sign extension for 32-bit AML code.
+        //
+        if( State->IsIntegerSize64 == AML_FALSE ) {
+            Operand1.u.Integer = AmlDecoderSignExtendInteger( State, Operand1.u.Integer );
+            Operand2.u.Integer = AmlDecoderSignExtendInteger( State, Operand2.u.Integer );
+        }
+
+        //
         // Calculate quotient as main result, and write it out to the target.
         //
         Result = ( AML_DATA ){
@@ -2322,7 +2345,7 @@ AmlEvalExpressionOpcode(
         RemainderTarget = NULL;
         break;
     case AML_OPCODE_ID_ADD_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_TRUE ) == AML_FALSE ) {
             return AML_FALSE;
         }
         Result = ( AML_DATA ){
@@ -2332,7 +2355,7 @@ AmlEvalExpressionOpcode(
         AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, "+", Target, Operand1, Operand2, Result );
         break;
     case AML_OPCODE_ID_SUBTRACT_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_TRUE ) == AML_FALSE ) {
             return AML_FALSE;
         }
         Result = ( AML_DATA ){
@@ -2342,7 +2365,7 @@ AmlEvalExpressionOpcode(
         AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, "-", Target, Operand1, Operand2, Result );
         break;
     case AML_OPCODE_ID_MULTIPLY_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_TRUE ) == AML_FALSE ) {
             return AML_FALSE;
         }
         Result = ( AML_DATA ){
@@ -2352,7 +2375,7 @@ AmlEvalExpressionOpcode(
         AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, "*", Target, Operand1, Operand2, Result );
         break;
     case AML_OPCODE_ID_MOD_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_TRUE ) == AML_FALSE ) {
             return AML_FALSE;
         } else if( Operand2.u.Integer == 0 ) {
             AML_DEBUG_ERROR( State, "Error: Mod divisor is zero.\n" );
@@ -2365,7 +2388,7 @@ AmlEvalExpressionOpcode(
         AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, "%", Target, Operand1, Operand2, Result );
         break;
     case AML_OPCODE_ID_AND_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_FALSE ) == AML_FALSE ) {
             return AML_FALSE;
         }
         Result = ( AML_DATA ){
@@ -2375,7 +2398,7 @@ AmlEvalExpressionOpcode(
         AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, "&", Target, Operand1, Operand2, Result );
         break;
     case AML_OPCODE_ID_NAND_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_FALSE ) == AML_FALSE ) {
             return AML_FALSE;
         }
         Result = ( AML_DATA ){
@@ -2385,7 +2408,7 @@ AmlEvalExpressionOpcode(
         AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, "~&", Target, Operand1, Operand2, Result );
         break;
     case AML_OPCODE_ID_OR_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_FALSE ) == AML_FALSE ) {
             return AML_FALSE;
         }
         Result = ( AML_DATA ){
@@ -2395,7 +2418,7 @@ AmlEvalExpressionOpcode(
         AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, "|", Target, Operand1, Operand2, Result );
         break;
     case AML_OPCODE_ID_NOR_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_FALSE ) == AML_FALSE ) {
             return AML_FALSE;
         }
         Result = ( AML_DATA ){
@@ -2405,7 +2428,7 @@ AmlEvalExpressionOpcode(
         AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, "~|", Target, Operand1, Operand2, Result );
         break;
     case AML_OPCODE_ID_SHIFT_LEFT_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_FALSE ) == AML_FALSE ) {
             return AML_FALSE;
         }
         Result = ( AML_DATA ){
@@ -2415,7 +2438,7 @@ AmlEvalExpressionOpcode(
         AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, "<<", Target, Operand1, Operand2, Result );
         break;
     case AML_OPCODE_ID_SHIFT_RIGHT_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_FALSE ) == AML_FALSE ) {
             return AML_FALSE;
         }
         Result = ( AML_DATA ){
@@ -2425,7 +2448,7 @@ AmlEvalExpressionOpcode(
         AmlDebugPrintArithmetic( State, AML_DEBUG_LEVEL_TRACE, ">>", Target, Operand1, Operand2, Result );
         break;
     case AML_OPCODE_ID_XOR_OP:
-        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target ) == AML_FALSE ) {
+        if( AmlEvalBinaryIntegerArithmeticArguments( State, &Operand1, &Operand2, &Target, AML_FALSE ) == AML_FALSE ) {
             return AML_FALSE;
         }
         Result = ( AML_DATA ){
@@ -2547,14 +2570,6 @@ AmlEvalExpressionOpcode(
     default:
         AML_DEBUG_ERROR( State, "Error: Invalid expression opcode!" );
         return AML_FALSE;
-    }
-
-    //
-    // Apply sign extension to maintain a correct internal value for differing spec integer sizes.
-    // TODO: This might not work out how I was expecting!
-    //
-    if( Result.Type == AML_DATA_TYPE_INTEGER ) {
-        Result.u.Integer = AmlDecoderSignExtendInteger( State, Result.u.Integer );
     }
 
     //
