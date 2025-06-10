@@ -129,6 +129,17 @@ AmlArenaInitialize(
         //
         .BaseChunkSize = ChunkSize
     };
+
+    //
+    // The BaseChunkSize used internally is only the actual data portion of the chunk,
+    // and doesn't include the size of the actual internal chunk header.
+    // Take this into account automatically to preserve the (probably) page-aligned
+    // ChunkSize values passed in, avoiding wasting an extra backing page upon chunk
+    // allocation.
+    //
+    if( Arena->BaseChunkSize > sizeof( AML_ARENA_CHUNK ) ) {
+        Arena->BaseChunkSize -= sizeof( AML_ARENA_CHUNK );
+    }
 }
 
 //
