@@ -208,7 +208,7 @@ AmlFieldRead(
     //
     // Attempt to read in chunks of the access width until we have received the full field value.
     //
-    for( i = 0; i < OutputBitCount; i += AccessBitWidth ) {
+    for( i = 0; i < OutputBitCount; i += WordBitCount ) {
         //
         // Read an access-word worth of data from the current (word) offset.
         //
@@ -437,7 +437,7 @@ AmlFieldWrite(
     //
     // Attempt to write in chunks of the access width until we have written the full field value.
     //
-    for( i = 0; i < Field->Element.Length; i += AccessBitWidth ) {
+    for( i = 0; i < Field->Element.Length; i += WordBitCount ) {
         //
         // Calculate the access-word-aligned byte index of the current word.
         //
