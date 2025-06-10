@@ -1526,11 +1526,11 @@ AmlConvFieldUnitStore(
     }
 
     //
-    // If the Buffer Field is smaller than or equal to the size of an Integer (in bits),
+    // If the field unit is smaller than or equal to the size of an Integer (in bits),
     // it will be treated as an Integer. Otherwise, it will be treated as a buffer.
     // 
     FieldUnitBufferSize = AmlFieldUnitAccessBufferSize( Input->u.FieldUnit );
-    if( FieldUnitBufferSize < ( State->IsIntegerSize64 ? 8 : 4 ) ) {
+    if( FieldUnitBufferSize <= ( State->IsIntegerSize64 ? 8 : 4 ) ) {
         SubInputData = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER };
         if( AmlFieldUnitRead( State, Input->u.FieldUnit, SubInputData.u.IntegerRaw,
                               sizeof( SubInputData.u.IntegerRaw ), AML_TRUE, NULL ) == AML_FALSE )
