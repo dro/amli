@@ -1683,7 +1683,6 @@ AmlConvPackageStore(
         // Debug output for package element types that shouldn't be possible.
         //
         switch( InputElement->Value.Type ) {
-        case AML_DATA_TYPE_NONE:
         case AML_DATA_TYPE_DEBUG:
         case AML_DATA_TYPE_PACKAGE_ELEMENT:
         case AML_DATA_TYPE_FIELD_UNIT:

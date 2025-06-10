@@ -536,6 +536,18 @@ AmlDataSizeOf(
     _In_ const AML_DATA* TargetValue
     )
 {
+    AML_PACKAGE_ELEMENT* Element;
+
+    //
+    // Package elements must be treated transparently, follow them to their underlying value.
+    //
+    if( TargetValue->Type == AML_DATA_TYPE_PACKAGE_ELEMENT ) {
+        Element = AmlPackageElementIndexDataResolve( &TargetValue->u.PackageElement );
+        if( Element != NULL ) {
+            TargetValue = &Element->Value;
+        }
+    }
+
     //
     // For a buffer, it returns the size in bytes of the data
     // For a string, it returns the size in bytes of the string, not counting the trailing NULL.
