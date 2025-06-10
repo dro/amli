@@ -597,6 +597,7 @@ AmlEvalPackageElementList(
     AML_PACKAGE_ELEMENT*  Element;
     SIZE_T                ElementCount;
     SIZE_T                i;
+    SIZE_T                RemainingCount;
 
     //
     // Process elements until we reach the end of the list element data.
@@ -622,7 +623,8 @@ AmlEvalPackageElementList(
     // the default entry of type Uninitialized (see ObjectType) is used to initialize the
     // package elements beyond those initialized from the PackageList.
     //
-    for( i = 0; i < ( Package->ElementCount - ElementCount ); i++ ) {
+    RemainingCount = ( Package->ElementCount - ElementCount );
+    for( i = 0; i < RemainingCount; i++ ) {
         if( ( Element = AmlHeapAllocate( &State->Heap, sizeof( *Element ) ) ) == NULL ) {
             return AML_FALSE;
         }
