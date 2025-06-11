@@ -1456,7 +1456,7 @@ AmlEvalExpressionOpcode(
     AML_OBJECT*                    Target;
     AML_OBJECT*                    RemainderTarget;
     AML_OBJECT*                    SuperName;
-    AML_DATA*                      TargetValue;
+    AML_DATA                       TargetValue;
     AML_DATA                       FieldUnit;
     AML_DATA                       Result;
     UINT64                         IntegerMaxValue;
@@ -1861,10 +1861,9 @@ AmlEvalExpressionOpcode(
         // For an object reference, the size of the referenced object is returned.
         // Other data types cause a fatal run-time error.
         //
-        TargetValue = &SuperName->u.Name.Value;
         Result = ( AML_DATA ){
             .Type      = AML_DATA_TYPE_INTEGER,
-            .u.Integer = AmlDataSizeOf( TargetValue )
+            .u.Integer = AmlDataSizeOf( &SuperName->u.Name.Value )
         };
 
         break;
@@ -2497,13 +2496,13 @@ AmlEvalExpressionOpcode(
         // as they are not regular Name objects with a value.
         //
         if( AmlObjectIsFieldUnit( Target ) ) {
-            TargetValue = &( AML_DATA ){ .Type = AML_DATA_TYPE_NONE };
+            TargetValue = ( AML_DATA ){ .Type = AML_DATA_TYPE_NONE };
             FieldUnit = ( AML_DATA ){ .Type = AML_DATA_TYPE_FIELD_UNIT, .u.FieldUnit = Target };
-            if( AmlConvObjectStore( State, &State->Heap, &FieldUnit, TargetValue, AML_CONV_FLAGS_IMPLICIT ) == AML_FALSE ) {
+            if( AmlConvObjectStore( State, &State->Heap, &FieldUnit, &TargetValue, AML_CONV_FLAGS_IMPLICIT ) == AML_FALSE ) {
                 return AML_FALSE;
             }
         } else if( Target->Type == AML_OBJECT_TYPE_NAME ) {
-            TargetValue = &Target->u.Name.Value;
+            TargetValue = Target->u.Name.Value;
         } else {
             return AML_FALSE;
         }
@@ -2512,7 +2511,7 @@ AmlEvalExpressionOpcode(
         // Convert the current value of the addend to an integer (and output to result var).
         //
         Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER };
-        if( AmlConvObjectStore( State, &State->Heap, TargetValue, &Result, AML_CONV_FLAGS_IMPLICIT ) == AML_FALSE ) {
+        if( AmlConvObjectStore( State, &State->Heap, &TargetValue, &Result, AML_CONV_FLAGS_IMPLICIT ) == AML_FALSE ) {
             return AML_FALSE;
         }
 
@@ -2546,13 +2545,13 @@ AmlEvalExpressionOpcode(
         // as they are not regular Name objects with a value.
         //
         if( AmlObjectIsFieldUnit( Target ) ) {
-            TargetValue = &( AML_DATA ) { .Type = AML_DATA_TYPE_NONE };
+            TargetValue = ( AML_DATA ){ .Type = AML_DATA_TYPE_NONE };
             FieldUnit = ( AML_DATA ){ .Type = AML_DATA_TYPE_FIELD_UNIT, .u.FieldUnit = Target };
-            if( AmlConvObjectStore( State, &State->Heap, &FieldUnit, TargetValue, AML_CONV_FLAGS_IMPLICIT ) == AML_FALSE ) {
+            if( AmlConvObjectStore( State, &State->Heap, &FieldUnit, &TargetValue, AML_CONV_FLAGS_IMPLICIT ) == AML_FALSE ) {
                 return AML_FALSE;
             }
         } else if( Target->Type == AML_OBJECT_TYPE_NAME ) {
-            TargetValue = &Target->u.Name.Value;
+            TargetValue = Target->u.Name.Value;
         } else {
             return AML_FALSE;
         }
@@ -2561,7 +2560,7 @@ AmlEvalExpressionOpcode(
         // Convert the current value of the addend to an integer (and output to result var).
         //
         Result = ( AML_DATA ){ .Type = AML_DATA_TYPE_INTEGER };
-        if( AmlConvObjectStore( State, &State->Heap, TargetValue, &Result, AML_CONV_FLAGS_IMPLICIT ) == AML_FALSE ) {
+        if( AmlConvObjectStore( State, &State->Heap, &TargetValue, &Result, AML_CONV_FLAGS_IMPLICIT ) == AML_FALSE ) {
             return AML_FALSE;
         }
 
