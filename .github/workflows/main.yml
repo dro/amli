@@ -33,7 +33,7 @@ jobs:
         id: meson-tests
         if: matrix.os == 'ubuntu-latest'
         run: |
-          export ASAN_OPTIONS=abort_on_error=1:detect_leaks=0:log_path=asan
+          export ASAN_OPTIONS=abort_on_error=1:detect_leaks=0
           export UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1
           meson test -C build || echo "status=failed" >> $GITHUB_OUTPUT
         continue-on-error: true
