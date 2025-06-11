@@ -1845,7 +1845,7 @@ AmlEvalNamedObjectOpcode(
         Object->u.Event = ( AML_OBJECT_EVENT ){
             .Host       = State->Host,
             .HostHandle = HostHandle,
-            .State      = 0
+            .Counter    = 0
         };
 
         //

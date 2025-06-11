@@ -172,7 +172,8 @@ AML_WAIT_STATUS
 AmlHostEventAwait(
     _Inout_ AML_HOST_CONTEXT* Host,
     _In_    UINT64            EventHandle,
-    _In_    UINT64            TimeoutMs
+    _In_    UINT64            TimeoutMs,
+    _In_    INT64             AmlCounter
     );
 
 //

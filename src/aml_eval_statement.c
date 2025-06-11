@@ -330,6 +330,7 @@ AmlEvalStatementOpcode(
             return AML_FALSE;
         }
         AmlHostEventReset( Object->u.Event.Host, Object->u.Event.HostHandle );
+        Object->u.Event.Counter = 0;
         AmlObjectRelease( Object );
         return AML_TRUE;
     case AML_OPCODE_ID_SIGNAL_OP:
@@ -343,7 +344,12 @@ AmlEvalStatementOpcode(
             AmlObjectRelease( Object );
             return AML_FALSE;
         }
+        if( Object->u.Event.Counter >= INT64_MAX ) {
+            AML_DEBUG_ERROR( State, "Error: Event counter signal overflow!\n" );
+            return AML_FALSE;
+        }
         AmlHostEventSignal( Object->u.Event.Host, Object->u.Event.HostHandle );
+        Object->u.Event.Counter += 1;
         AmlObjectRelease( Object );
         return AML_TRUE;
     case AML_OPCODE_ID_SLEEP_OP:

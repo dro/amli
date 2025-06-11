@@ -1626,10 +1626,19 @@ AmlEvalExpressionOpcode(
         //
         // Attempt to await signalling of the given event.
         //
-        WaitStatus = AmlHostEventAwait( SuperName->u.Event.Host, SuperName->u.Event.HostHandle, Operand1.u.Integer );
+        WaitStatus = AmlHostEventAwait( SuperName->u.Event.Host, SuperName->u.Event.HostHandle, Operand1.u.Integer, SuperName->u.Event.Counter );
         if( WaitStatus == AML_WAIT_STATUS_ERROR ) {
             AmlObjectRelease( SuperName );
             return AML_FALSE;
+        }
+
+        //
+        // Decrease the internal counter if the wait was successful.
+        //
+        if( WaitStatus == AML_WAIT_STATUS_SUCCESS ) {
+            if( SuperName->u.Event.Counter > 0 ) {
+                SuperName->u.Event.Counter -= 1;
+            }
         }
 
         //

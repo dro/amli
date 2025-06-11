@@ -240,8 +240,19 @@ AmlHostMemoryMap(
     _Outptr_ VOID**            ppMappedAddress
     )
 {
-    AML_HOST_PRINTF( "Host: Mapping physical address 0x%"PRIx64" (size=0x%"PRIx64") (virtual=0x%"PRIx64")\n", PhysicalAddress, Size, PhysicalAddress );
-    *ppMappedAddress = ( VOID* )PhysicalAddress;
+    VOID* Allocation;
+
+    //
+    // Attempt to allocate a block of fake test memory for the caller.
+    // Does not handle the case of multiple maps of the physical address,
+    // the simple fake memory system is just to implement the ACPICA testcases.
+    //
+    if( ( Allocation = malloc( Size ) ) == NULL ) {
+        return AML_FALSE;
+    }
+    AML_MEMSET( Allocation, 0, Size );
+    AML_HOST_PRINTF( "Host: Mapping physical address 0x%"PRIx64" (size=0x%"PRIx64") (virtual=0x%p)\n", PhysicalAddress, Size, Allocation );
+    *ppMappedAddress = Allocation;
     return AML_TRUE;
 }
 
@@ -257,6 +268,7 @@ AmlHostMemoryUnmap(
     )
 {
     AML_HOST_PRINTF( "Host: Unmapping virtual address 0x%p (size: 0x%"PRIx64")\n", MappedAddress, Size );
+    free( MappedAddress );
     return AML_TRUE;
 }
 
@@ -389,9 +401,13 @@ AML_WAIT_STATUS
 AmlHostEventAwait(
     _Inout_ AML_HOST_CONTEXT* Host,
     _In_    UINT64            EventHandle,
-    _In_    UINT64            TimeoutMs
+    _In_    UINT64            TimeoutMs,
+    _In_    INT64             AmlCounter
     )
 {
+    if( AmlCounter <= 0 ) {
+        return AML_WAIT_STATUS_TIMEOUT;
+    }
     AML_HOST_PRINTF( "Host: Awaiting signal of internal event object: 0x%"PRIx64" (timeout: 0x%"PRIx64")\n", EventHandle, TimeoutMs );
     return AML_WAIT_STATUS_SUCCESS;
 }
@@ -561,7 +577,7 @@ AmlHostMmioRead8(
     )
 {
     AML_HOST_PRINTF( "Host: Read8 from MMIO address 0x%"PRIx64"\n", MmioAddress );
-    return 0xFF;
+    return *( UINT8* )MmioAddress;
 }
 
 //
@@ -574,7 +590,7 @@ AmlHostMmioRead16(
     )
 {
     AML_HOST_PRINTF( "Host: Read16 from MMIO address 0x%"PRIx64"\n", MmioAddress );
-    return 0xFFFF;
+    return *( UINT16* )MmioAddress;
 }
 
 //
@@ -587,7 +603,7 @@ AmlHostMmioRead32(
     )
 {
     AML_HOST_PRINTF( "Host: Read32 from MMIO address 0x%"PRIx64"\n", MmioAddress );
-    return 0xFFFFFFFF;
+    return *( UINT32* )MmioAddress;
 }
 
 //
@@ -600,7 +616,7 @@ AmlHostMmioRead64(
     )
 {
     AML_HOST_PRINTF( "Host: Read64 from MMIO address 0x%"PRIx64"\n", MmioAddress );
-    return 0xFFFFFFFFFFFFFFFF;
+    return *( UINT64* )MmioAddress;
 }
 
 //
@@ -614,6 +630,7 @@ AmlHostMmioWrite8(
     )
 {
     AML_HOST_PRINTF( "Host: Write8 0x%"PRIx64" to MMIO address 0x%"PRIx64"\n", ( UINT64 )Value, MmioAddress );
+    *( UINT8* )MmioAddress = Value;
 }
 
 //
@@ -627,6 +644,7 @@ AmlHostMmioWrite16(
     )
 {
     AML_HOST_PRINTF( "Host: Write16 0x%"PRIx64" to MMIO address 0x%"PRIx64"\n", ( UINT64 )Value, MmioAddress );
+    *( UINT16* )MmioAddress = Value;
 }
 
 //
@@ -640,6 +658,7 @@ AmlHostMmioWrite32(
     )
 {
     AML_HOST_PRINTF( "Host: Write32 0x%"PRIx64" to MMIO address 0x%"PRIx64"\n", ( UINT64 )Value, MmioAddress );
+    *( UINT32* )MmioAddress = Value;
 }
 
 //
@@ -653,6 +672,7 @@ AmlHostMmioWrite64(
     )
 {
     AML_HOST_PRINTF( "Host: Write64 0x%"PRIx64" to MMIO address 0x%"PRIx64"\n", ( UINT64 )Value, MmioAddress );
+    *( UINT64* )MmioAddress = Value;
 }
 
 //

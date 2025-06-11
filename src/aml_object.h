@@ -301,7 +301,7 @@ typedef struct _AML_OBJECT_DATA_REGION {
 typedef struct _AML_OBJECT_EVENT {
     struct _AML_HOST_CONTEXT* Host;
     UINT64                    HostHandle;
-    volatile ULONG            State;
+    INT64                     Counter;
 } AML_OBJECT_EVENT;
 
 //

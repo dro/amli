@@ -101,6 +101,8 @@ AmlTestExecuteSingleTable(
     AML_HOST_CONTEXT       Host;
     AML_NAMESPACE_NODE*    TsfiNode;
     const AML_DATA*        TsfiValue;
+    AML_NAMESPACE_NODE*    TestMain;
+    AML_NAMESPACE_NODE*    ErrsNode;
 
     //
     // The input data must be large enuogh to contain a table header.
@@ -209,6 +211,46 @@ AmlTestExecuteSingleTable(
             }
         }
     }
+
+    //
+    // If the namespace has a MAIN method, execute it.
+    // This is used to support ACPICA testcases (specifically grammar.asl).
+    //
+    if( AmlNamespaceSearchZ( &State.Namespace, NULL, "MAIN", 0, &TestMain ) ) {
+        if( ( TestMain->Object != NULL ) && ( TestMain->Object->Type == AML_OBJECT_TYPE_METHOD ) ) {
+            if( AmlMethodInvoke( &State, TestMain->Object, 0, NULL, 0, NULL ) == AML_FALSE ) {
+                AML_DEBUG_ERROR( &State, "ACPICA-style testcase MAIN invoke failed!\n" );
+                goto FAIL_FREE_STATE;
+            }
+        }
+    }
+
+    //
+    // Check for any test case failures (ACPI style), ERRS will contain the amount of failed test cases.
+    //
+    if( AmlNamespaceSearchZ( &State.Namespace, NULL, "\\ERRS", 0, &ErrsNode ) ) {
+        if( ErrsNode->Object->Type == AML_OBJECT_TYPE_NAME ) {
+            TsfiValue = &ErrsNode->Object->u.Name.Value;
+            if( ( TsfiValue->Type != AML_DATA_TYPE_INTEGER ) || ( TsfiValue->u.Integer != 0 ) ) {
+                AML_DEBUG_ERROR( &State, "Error: One or more test cases failed! ERRS count: " );
+                if( TsfiValue->Type == AML_DATA_TYPE_INTEGER ) {
+                    AML_DEBUG_ERROR( &State, "%"PRId64"", TsfiValue->u.Integer );
+                } else {
+                    AmlDebugPrintDataValue( &State, AML_DEBUG_LEVEL_ERROR, TsfiValue );
+                }
+                AML_DEBUG_ERROR( &State, "\n" );
+                goto FAIL_FREE_STATE;
+            }
+        }
+    }
+
+    //
+    // Execute any ACPICA-style test case methods.
+    //
+    // if( AmlIterateNamespaceObjects( &State, NULL, AmlTestDeviceIterator, NULL, AML_OBJECT_TYPE_DEVICE ) == AML_FALSE ) {
+    //     AML_DEBUG_ERROR( &State, "Error: Failed to execute ACPICA style test cases!\n" );
+    //     goto FAIL_FREE_STATE;
+    // }
 
 #ifndef AML_BUILD_FUZZER
     printf( "\n\nAll test cases completed successfully.\n" );
@@ -344,7 +386,7 @@ main(
     }
     return AmlTestMain( ArgV[ 1 ] );
 #else
-    return AmlTestMain( "C:\\git\\amli\\tests\\board_test_2\\DSDT.aml" );
+    return AmlTestMain( "C:\\git\\amli\\tests\\acpica_grammar_1\\grammar.aml" );
 #endif
 }
 
