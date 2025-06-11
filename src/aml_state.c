@@ -852,6 +852,123 @@ AmlBroadcastRegionSpaceStateUpdate(
 }
 
 //
+// Visit all namespace nodes of the given object type in DFS traversal order.
+// If VisitObjectType is AML_OBJECT_TYPE_NONE, any object type is visited.
+//
+_Success_( return )
+BOOLEAN
+AmlIterateNamespaceObjects(
+    _Inout_     AML_STATE*                     State,
+    _Inout_opt_ AML_NAMESPACE_TREE_NODE*       StartTreeNode,
+    _In_        AML_ITERATOR_NAMESPACE_ROUTINE UserRoutine,
+    _In_opt_    VOID*                          UserContext,
+    _In_opt_    AML_OBJECT_TYPE                VisitObjectType
+    )
+{
+    AML_ARENA_SNAPSHOT            TempSnapshot;
+    AML_NAMESPACE_TREE_DFS_FRAME* Stack;
+    SIZE_T                        StackTail;
+    AML_NAMESPACE_TREE_DFS_FRAME* Frame;
+    AML_NAMESPACE_NODE*           NsNode;
+    AML_ITERATOR_ACTION           Action;
+
+    //
+    // The namespace tree must have been built for the start node.
+    //
+    StartTreeNode = ( ( StartTreeNode == NULL ) ? &State->Namespace.TreeRoot : StartTreeNode );
+    if( StartTreeNode->IsPresent == AML_FALSE ) {
+        return AML_FALSE;
+    }
+
+    //
+    // Attempt to allocate a pending visit stack for the traversal.
+    // There is no visiting order requirement between siblings, only that a parent must be visited before its children.
+    //
+    TempSnapshot = AmlArenaSnapshot( &State->Namespace.TempArena );
+    Stack = AmlArenaAllocate( &State->Namespace.TempArena, ( sizeof( Stack[ 0 ] ) * State->Namespace.TreeMaxDepth ) );
+    if( Stack == NULL ) {
+        return AML_FALSE;
+    }
+
+    //
+    // Push the initial root node to the visit stack.
+    //
+    StackTail = 0;
+    Stack[ StackTail++ ] = ( AML_NAMESPACE_TREE_DFS_FRAME ){
+        .Node      = StartTreeNode,
+        .NextChild = StartTreeNode->ChildFirst
+    };
+
+    //
+    // Visit nodes until we have completely ran out of pushed stack items.
+    //
+    Action = AML_ITERATOR_ACTION_CONTINUE;
+    while( StackTail != 0 ) {
+        //
+        // Lookup the next frame to process on the stack.
+        //
+        Frame = &Stack[ StackTail - 1 ];
+
+        //
+        // If this is the first time processing the node,
+        // and we aren't here because we are processing a child of it,
+        // perform the actual processing for the node.
+        //
+        Action = AML_ITERATOR_ACTION_CONTINUE;
+        if( ( Frame->Node != &State->Namespace.TreeRoot )
+            && ( Frame->NextChild == Frame->Node->ChildFirst ) )
+        {
+            NsNode = AML_CONTAINING_RECORD( Frame->Node, AML_NAMESPACE_NODE, TreeEntry );
+            if( NsNode->Object != NULL ) {
+                if( ( VisitObjectType == AML_OBJECT_TYPE_NONE ) || ( NsNode->Object->Type == VisitObjectType ) ) {
+                    Action = UserRoutine( UserContext, State, NsNode );
+                    if( ( Action == AML_ITERATOR_ACTION_STOP ) || ( Action == AML_ITERATOR_ACTION_ERROR ) ) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        //
+        // If we want to end processing of children down the current path,
+        // or if there are no children left to process for the current frame,
+        // pop the frame from the stack.
+        //
+        if( ( Frame->NextChild == NULL ) || ( Action == AML_ITERATOR_ACTION_SKIP ) ) {
+            StackTail -= 1;
+            continue;
+        }
+
+        //
+        // This should never happen unless the tree is somehow out of date or invalid (or the traversal algorithm is broken).
+        //
+        if( StackTail >= State->Namespace.TreeMaxDepth ) {
+            AML_DEBUG_PANIC( State, "Fatal: Namespace node visit stack size exceeded maximum tree depth!" );
+            return AML_FALSE;
+        }
+
+        //
+        // If there is still a child to process for the current frame, queue it up to be processed.
+        //
+        Stack[ StackTail++ ] = ( AML_NAMESPACE_TREE_DFS_FRAME ){
+            .Node      = Frame->NextChild,
+            .NextChild = Frame->NextChild->ChildFirst
+        };
+
+        //
+        // Advance the child iterator for the current parent level.
+        //
+        Frame->NextChild = Frame->NextChild->Next;
+    }
+
+    //
+    // Rollback temporary visit stack allocations.
+    //
+    AmlArenaSnapshotRollback( &State->Namespace.TempArena, &TempSnapshot );
+    return ( Action != AML_ITERATOR_ACTION_ERROR );
+}
+
+//
 // Attempt to register a region-space access handler.
 // Registering a handler for a region-space type that has already had a handler register
 // will overwrite the existing handler, and the caller must take their precaution to free

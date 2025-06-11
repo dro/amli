@@ -140,6 +140,29 @@ typedef struct _AML_STATE_PARAMETERS {
     AML_HOST_CONTEXT* Host;
 } AML_STATE_PARAMETERS;
 
+
+//
+// User-returned iterator actions.
+//
+typedef enum _AML_ITERATOR_ACTION {
+    AML_ITERATOR_ACTION_CONTINUE,
+    AML_ITERATOR_ACTION_SKIP,
+    AML_ITERATOR_ACTION_STOP,
+    AML_ITERATOR_ACTION_ERROR,
+} AML_ITERATOR_ACTION;
+
+//
+// User-provided namespace iterator callback.
+//
+typedef
+_Success_( return != AML_ITERATOR_ACTION_ERROR )
+AML_ITERATOR_ACTION
+( *AML_ITERATOR_NAMESPACE_ROUTINE )(
+    _In_opt_ VOID*               UserContext,
+    _Inout_  AML_STATE*          State,
+    _Inout_  AML_NAMESPACE_NODE* Node
+    );
+
 //
 // Initialize the AML decoder/evaluation state.
 // Note: The given allocator and host context must exist for the entire lifetime of the state.
@@ -199,6 +222,20 @@ BOOLEAN
 AmlCompleteInitialLoad(
     _Inout_ AML_STATE* State,
     _In_    BOOLEAN    InitializeDevices
+    );
+
+//
+// Visit all namespace nodes of the given object type in DFS traversal order.
+// If VisitObjectType is AML_OBJECT_TYPE_NONE, any object type is visited.
+//
+_Success_( return )
+BOOLEAN
+AmlIterateNamespaceObjects(
+    _Inout_     AML_STATE*                     State,
+    _Inout_opt_ AML_NAMESPACE_TREE_NODE*       StartTreeNode,
+    _In_        AML_ITERATOR_NAMESPACE_ROUTINE UserRoutine,
+    _In_opt_    VOID*                          UserContext,
+    _In_opt_    AML_OBJECT_TYPE                VisitObjectType
     );
 
 //
